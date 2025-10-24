@@ -143,7 +143,7 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
           </button>
 
           {/* Share Menu using Headless UI */}
-          <Menu as="div" className="relative">
+          <Menu as="div" className="relative share-menu-container">
             <MenuButton className="action-btn">
               <Share2 size={18} />
               <MoreHorizontal size={14} />
