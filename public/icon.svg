@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Headphones band -->
+  <path d="M4 12a8 8 0 0 1 16 0" />
+  <!-- Left earcup -->
+  <rect x="3" y="12" width="4" height="7" rx="1.5" />
+  <!-- Right earcup -->
+  <rect x="17" y="12" width="4" height="7" rx="1.5" />
+  <!-- Pulse wave inside -->
+  <polyline points="7 16 9 14 11 17 13 13 15 15 17 14" />
+</svg>
