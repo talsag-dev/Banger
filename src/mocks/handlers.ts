@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import type { Feed, MusicPost } from "../types/music";
+import { ReactionType } from "../types/music";
 
 // Mock data
 const mockPosts: MusicPost[] = [
@@ -26,13 +27,13 @@ const mockPosts: MusicPost[] = [
       {
         id: "r1",
         userId: "user2",
-        type: "❤️",
+        type: ReactionType.Love,
         timestamp: new Date().toISOString(),
       },
       {
         id: "r2",
         userId: "user3",
-        type: "🔥",
+        type: ReactionType.Fire,
         timestamp: new Date().toISOString(),
       },
     ],
@@ -68,7 +69,7 @@ const mockPosts: MusicPost[] = [
       {
         id: "r3",
         userId: "user1",
-        type: "😍",
+        type: ReactionType.HeartEyes,
         timestamp: new Date().toISOString(),
       },
     ],
@@ -94,13 +95,13 @@ const mockPosts: MusicPost[] = [
       {
         id: "r4",
         userId: "user1",
-        type: "🔥",
+        type: ReactionType.Fire,
         timestamp: new Date().toISOString(),
       },
       {
         id: "r5",
         userId: "user2",
-        type: "💯",
+        type: ReactionType.Hundred,
         timestamp: new Date().toISOString(),
       },
     ],

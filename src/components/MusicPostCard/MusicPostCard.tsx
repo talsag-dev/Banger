@@ -8,58 +8,55 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { clsx } from "clsx";
-import type { MusicPost } from "../types/music";
-import { PlatformIcon } from "./PlatformIcon";
-import { CommentsDialog } from "./CommentsDialog";
-
-interface MusicPostCardProps {
-  post: MusicPost;
-  onReaction: (postId: string, type: string) => void;
-  onComment: (postId: string, content: string) => void;
-}
+import {
+  REACTION_MAP,
+  AVAILABLE_REACTIONS,
+  getReactionEmoji,
+} from "../../utils/reactions";
+import type { MusicPostCardProps } from "./types";
+import { initialState, musicPostCardReducer } from "./reducer";
+import { formatDuration, getTimeAgo } from "./utils";
+import "./MusicPostCard.css";
+import { CommentsDialog } from "../CommentsDialog";
+import { PlatformIcon } from "../PlatformIcon";
 
 export const MusicPostCard: React.FC<MusicPostCardProps> = ({
   post,
   onReaction,
   onComment,
 }) => {
-  const [isCommentsOpen, setIsCommentsOpen] = React.useState(false);
+  const [{ isCommentsOpen }, dispatch] = React.useReducer(
+    musicPostCardReducer,
+    initialState
+  );
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const getTimeAgo = (timestamp: string) => {
-    const now = new Date();
-    const postTime = new Date(timestamp);
-    const diffInHours = Math.floor(
-      (now.getTime() - postTime.getTime()) / (1000 * 60 * 60)
-    );
-
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours === 1) return "1 hour ago";
-    return `${diffInHours} hours ago`;
-  };
-
-  const reactionEmojis = ["❤️", "🔥", "😍", "🎵", "💯"];
+  const {
+    userId,
+    timestamp,
+    track,
+    feeling,
+    caption,
+    reactions,
+    isCurrentlyListening,
+    comments,
+    id,
+  } = post;
 
   return (
     <div className="music-post-card">
       <div className="post-header">
         <div className="user-info">
           <img
-            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${post.userId}`}
+            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`}
             alt="User avatar"
             className="user-avatar"
           />
           <div>
-            <h4 className="username">@{post.userId}</h4>
-            <span className="timestamp">{getTimeAgo(post.timestamp)}</span>
+            <h4 className="username">@{userId}</h4>
+            <span className="timestamp">{getTimeAgo(timestamp)}</span>
           </div>
         </div>
-        {post.isCurrentlyListening && (
+        {isCurrentlyListening && (
           <div className="currently-listening">
             <Music className="pulse-icon" size={16} />
             <span>Currently listening</span>
@@ -69,25 +66,23 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
 
       <div className="track-info">
         <img
-          src={post.track.albumCover}
-          alt={`${post.track.album} cover`}
+          src={track.albumCover}
+          alt={`${track.album} cover`}
           className="album-cover"
         />
         <div className="track-details">
-          <h3 className="track-title">{post.track.title}</h3>
-          <p className="track-artist">{post.track.artist}</p>
-          <p className="track-album">{post.track.album}</p>
+          <h3 className="track-title">{track.title}</h3>
+          <p className="track-artist">{track.artist}</p>
+          <p className="track-album">{track.album}</p>
           <div className="track-meta">
-            <span className="duration">
-              {formatDuration(post.track.duration)}
-            </span>
+            <span className="duration">{formatDuration(track.duration)}</span>
             <PlatformIcon
-              platform={post.track.platform}
+              platform={track.platform}
               size={16}
-              title={post.track.platform}
+              title={track.platform}
             />
             <a
-              href={post.track.externalUrl}
+              href={track.externalUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link"
@@ -99,31 +94,35 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
         </div>
       </div>
 
-      {post.feeling && <div className="post-feeling">{post.feeling}</div>}
+      {feeling && <div className="post-feeling">{feeling}</div>}
 
-      {post.caption && <div className="post-caption">{post.caption}</div>}
+      {caption && <div className="post-caption">{caption}</div>}
 
       <div className="post-actions">
         {/* Reactions Menu using Headless UI */}
         <Menu as="div" className="relative">
           <MenuButton className="reactions-menu-btn">
-            <span className="reaction-trigger">❤️</span>
-            {post.reactions.length > 0 && (
-              <span className="reaction-count">{post.reactions.length}</span>
+            <span className="reaction-trigger">
+              {reactions.length > 0
+                ? getReactionEmoji(reactions[0].type)
+                : "❤️"}
+            </span>
+            {reactions.length > 0 && (
+              <span className="reaction-count">{reactions.length}</span>
             )}
           </MenuButton>
           <MenuItems className="reactions-menu">
-            {reactionEmojis.map((emoji) => (
-              <MenuItem key={emoji}>
+            {AVAILABLE_REACTIONS.map((reactionType) => (
+              <MenuItem key={reactionType}>
                 {({ focus }) => (
                   <button
-                    onClick={() => onReaction(post.id, emoji)}
+                    onClick={() => onReaction(id, reactionType)}
                     className={clsx(
                       "reaction-menu-item",
                       focus && "reaction-menu-item-active"
                     )}
                   >
-                    {emoji}
+                    {REACTION_MAP[reactionType]}
                   </button>
                 )}
               </MenuItem>
@@ -134,11 +133,11 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
         <div className="action-buttons">
           <button
             className="action-btn"
-            onClick={() => setIsCommentsOpen(true)}
+            onClick={() => dispatch({ type: "OPEN_COMMENTS" })}
           >
             <MessageCircle size={18} />
-            {post.comments.length > 0 && (
-              <span className="count">{post.comments.length}</span>
+            {comments.length > 0 && (
+              <span className="count">{comments.length}</span>
             )}
           </button>
 
@@ -190,11 +189,10 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
         </div>
       </div>
 
-      {/* Comments Dialog */}
       <CommentsDialog
         isOpen={isCommentsOpen}
-        onClose={() => setIsCommentsOpen(false)}
-        postId={post.id}
+        onClose={() => dispatch({ type: "CLOSE_COMMENTS" })}
+        postId={id}
         onComment={onComment}
       />
     </div>

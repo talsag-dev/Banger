@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
@@ -7,14 +7,8 @@ import {
   DialogBackdrop,
 } from "@headlessui/react";
 import { X } from "lucide-react";
-import type { Comment } from "../types/music";
-
-interface CommentsDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  postId: string;
-  onComment: (postId: string, content: string) => void;
-}
+import type { Comment } from "../../types/music";
+import type { CommentsDialogProps } from "./types";
 
 export const CommentsDialog: React.FC<CommentsDialogProps> = ({
   isOpen,
@@ -28,7 +22,7 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
   const queryClient = useQueryClient();
 
   // Handle skeleton timing to prevent immediate flicker
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
         setShowSkeleton(true);
@@ -39,7 +33,6 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
     }
   }, [isOpen]);
 
-  // Fetch comments when dialog opens
   const { data: comments = [], isLoading: commentsLoading } = useQuery({
     queryKey: ["comments", postId],
     queryFn: async (): Promise<Comment[]> => {
@@ -47,11 +40,10 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
       if (!response.ok) throw new Error("Failed to fetch comments");
       return response.json();
     },
-    enabled: isOpen, // Only fetch when dialog is open
-    staleTime: 30000, // Cache for 30 seconds to avoid refetching
+    enabled: isOpen,
+    staleTime: 30000,
   });
 
-  // Mutation for posting comments
   const postCommentMutation = useMutation({
     mutationFn: async (content: string) => {
       const response = await fetch(`/api/posts/${postId}/comments`, {
@@ -63,10 +55,8 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
       return response.json();
     },
     onSuccess: () => {
-      // Invalidate and refetch comments
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
       setCommentText("");
-      // Also call the original onComment for any parent component logic
       onComment(postId, commentText);
     },
   });

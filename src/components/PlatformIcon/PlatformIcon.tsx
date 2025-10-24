@@ -1,18 +1,11 @@
 import React from "react";
 import { Music } from "lucide-react";
 
-// Import SVG files
-import SpotifyIcon from "../assets/spotify-color-svgrepo-com.svg";
-import AppleMusicIcon from "../assets/apple-music-svgrepo-com.svg";
-import SoundCloudIcon from "../assets/soundcloud-color-svgrepo-com.svg";
-import YouTubeMusicIcon from "../assets/youtube-music-song-multimedia-audio-svgrepo-com.svg";
-
-interface PlatformIconProps {
-  platform: string;
-  size?: number;
-  className?: string;
-  title?: string;
-}
+import SpotifyIcon from "../../assets/spotify-color-svgrepo-com.svg";
+import AppleMusicIcon from "../../assets/apple-music-svgrepo-com.svg";
+import SoundCloudIcon from "../../assets/soundcloud-color-svgrepo-com.svg";
+import YouTubeMusicIcon from "../../assets/youtube-music-song-multimedia-audio-svgrepo-com.svg";
+import type { PlatformIconProps } from "./types";
 
 export const PlatformIcon: React.FC<PlatformIconProps> = ({
   platform,

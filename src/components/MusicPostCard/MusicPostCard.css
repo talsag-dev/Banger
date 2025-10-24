@@ -215,10 +215,8 @@
   gap: 16px;
 }
 
-/* Share Menu Container */
 .share-menu-container {
   position: relative;
-  z-index: 100;
 }
 
 .action-btn {

@@ -45,10 +45,22 @@ export interface UserSettings {
   profileVisibility: "public" | "friends" | "private";
 }
 
+export const ReactionType = {
+  Love: "love",
+  Fire: "fire",
+  HeartEyes: "heart_eyes",
+  MusicalNote: "musical_note",
+  Hundred: "hundred",
+  Sad: "sad",
+  Rocket: "rocket",
+} as const;
+
+export type ReactionType = (typeof ReactionType)[keyof typeof ReactionType];
+
 export interface Reaction {
   id: string;
   userId: string;
-  type: "❤️" | "🔥" | "😍" | "🎵" | "💯" | "😢" | "🚀";
+  type: ReactionType;
   timestamp: string;
 }
 
