@@ -35,15 +35,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     }
   }, [isOpen, settings]);
 
-  const handleSettingChange = React.useCallback((
-    settingId: keyof UserSettings,
-    value: boolean
-  ) => {
-    setCurrentSettings(prevSettings => {
-      const newSettings = updateSetting(prevSettings, settingId, value);
-      return newSettings;
-    });
-  }, []);
+  const handleSettingChange = React.useCallback(
+    (settingId: keyof UserSettings, value: boolean) => {
+      setCurrentSettings((prevSettings) => {
+        const newSettings = updateSetting(prevSettings, settingId, value);
+        return newSettings;
+      });
+    },
+    []
+  );
 
   const handleSave = React.useCallback(async () => {
     try {
@@ -83,9 +83,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <DialogTitle className={styles.modalTitle}>
                   Settings
                 </DialogTitle>
-                <Button 
-                  onClick={onClose} 
-                  variant="ghost" 
+                <Button
+                  onClick={onClose}
+                  variant="ghost"
                   size="sm"
                   leftIcon={<X size={20} />}
                   className={styles.modalClose}

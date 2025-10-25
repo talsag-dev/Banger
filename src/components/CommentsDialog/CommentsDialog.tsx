@@ -102,9 +102,9 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
           <DialogPanel className={styles.dialogPanel} transition>
             <DialogTitle className={styles.dialogTitle}>
               Comments
-              <Button 
-                onClick={onClose} 
-                variant="ghost" 
+              <Button
+                onClick={onClose}
+                variant="ghost"
                 size="sm"
                 leftIcon={<X size={20} />}
                 className={styles.dialogCloseBtn}

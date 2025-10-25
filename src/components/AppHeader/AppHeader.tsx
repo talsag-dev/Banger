@@ -21,15 +21,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               Search music, friends, or feelings...
             </span>
           </button>
-          <Button 
-            onClick={onNewPostClick} 
-            variant="ghost" 
+          <Button
+            onClick={onNewPostClick}
+            variant="ghost"
             size="sm"
             leftIcon={<Plus size={20} />}
             className={styles.headerBtn}
           />
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             size="sm"
             leftIcon={<Bell size={20} />}
             className={styles.headerBtn}
@@ -38,19 +38,24 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <PopoverButton className={styles.userMenuButton}>
               <User size={20} />
             </PopoverButton>
-            <PopoverPanel 
+            <PopoverPanel
               anchor={{
                 to: "bottom end",
-                gap: 8
+                gap: 8,
               }}
               className={styles.userMenuPanel}
             >
               <div className={styles.userMenuItems}>
-                <Button variant="ghost" size="sm" fullWidth className={styles.userMenuItem}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  fullWidth
+                  className={styles.userMenuItem}
+                >
                   Profile
                 </Button>
                 <Button
-                  variant="ghost" 
+                  variant="ghost"
                   size="sm"
                   fullWidth
                   className={styles.userMenuItem}
@@ -58,11 +63,21 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 >
                   Settings
                 </Button>
-                <Button variant="ghost" size="sm" fullWidth className={styles.userMenuItem}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  fullWidth
+                  className={styles.userMenuItem}
+                >
                   Help
                 </Button>
                 <hr className={styles.userMenuSeparator} />
-                <Button variant="ghost" size="sm" fullWidth className={styles.userMenuItem}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  fullWidth
+                  className={styles.userMenuItem}
+                >
                   Sign Out
                 </Button>
               </div>

@@ -31,10 +31,10 @@ const EmptyFeed: React.FC<EmptyFeedProps> = ({ onDiscoverPeople }) => {
         Connect with friends or follow some music lovers to see their posts
         here!
       </p>
-      <Button 
-        variant="primary" 
+      <Button
+        variant="primary"
         size="md"
-        className={styles.ctaButton} 
+        className={styles.ctaButton}
         onClick={handleDiscoverClick}
       >
         Discover People

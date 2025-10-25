@@ -61,9 +61,9 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
                       onSearchQueryChange(event.target.value)
                     }
                   />
-                  <Button 
-                    onClick={onClose} 
-                    variant="ghost" 
+                  <Button
+                    onClick={onClose}
+                    variant="ghost"
                     size="sm"
                     leftIcon={<X size={20} />}
                     className={styles.searchCloseBtn}
