@@ -31,6 +31,17 @@ export interface User {
   settings: UserSettings;
 }
 
+export interface UserProfile extends User {
+  bio?: string;
+  followersCount: number;
+  followingCount: number;
+  postsCount: number;
+  isFollowing?: boolean; // undefined for own profile
+  spotifyConnected: boolean;
+  appleConnected: boolean;
+  joinedDate: string;
+}
+
 export interface Platform {
   type: "spotify" | "apple-music" | "youtube-music" | "soundcloud";
   isConnected: boolean;

@@ -10,13 +10,22 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onSearchClick,
   onNewPostClick,
   onSettingsClick,
+  onProfileClick,
+  onHomeClick,
 }) => {
   return (
     <header className={styles.appHeader}>
       <div className={styles.headerContent}>
-        <Text variant="title" weight="bold" as="h1" className={styles.appTitle}>
-          Banger
-        </Text>
+        <div className={styles.appTitleContainer} onClick={onHomeClick}>
+          <Text
+            variant="title"
+            weight="bold"
+            as="h1"
+            className={styles.appTitle}
+          >
+            Banger
+          </Text>
+        </div>
         <div className={styles.headerActions}>
           <div className={styles.searchContainer} onClick={onSearchClick}>
             <Search size={16} className={styles.searchIcon} />
@@ -53,41 +62,52 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               }}
               className={styles.userMenuPanel}
             >
-              <div className={styles.userMenuItems}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  fullWidth
-                  className={styles.menuButton}
-                >
-                  Profile
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  fullWidth
-                  onClick={onSettingsClick}
-                  className={styles.menuButton}
-                >
-                  Settings
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  fullWidth
-                  className={styles.menuButton}
-                >
-                  Help
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  fullWidth
-                  className={styles.menuButton}
-                >
-                  Sign Out
-                </Button>
-              </div>
+              {({ close }) => (
+                <div className={styles.userMenuItems}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    fullWidth
+                    onClick={() => {
+                      close();
+                      onProfileClick();
+                    }}
+                    className={styles.menuButton}
+                  >
+                    Profile
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    fullWidth
+                    onClick={() => {
+                      close();
+                      onSettingsClick();
+                    }}
+                    className={styles.menuButton}
+                  >
+                    Settings
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    fullWidth
+                    onClick={() => close}
+                    className={styles.menuButton}
+                  >
+                    Help
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    fullWidth
+                    onClick={() => close}
+                    className={styles.menuButton}
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+              )}
             </PopoverPanel>
           </Popover>
         </div>

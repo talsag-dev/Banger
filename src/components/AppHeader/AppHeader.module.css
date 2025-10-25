@@ -17,12 +17,40 @@
   padding: var(--space-3) var(--space-4);
 }
 
+.appTitleContainer {
+  cursor: pointer;
+  transition: var(--transition-all);
+  position: relative;
+  overflow: hidden;
+}
+
+.appTitleContainer:hover {
+  transform: translateY(-1px);
+}
+
 .appTitle {
   margin: 0;
   background: var(--gradient-rainbow);
+  background-size: 200% 100%;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  animation: gradientSlide 3s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes gradientSlide {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.appTitleContainer:hover .appTitle {
+  animation-duration: 1s;
 }
 
 .headerActions {

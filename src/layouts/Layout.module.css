@@ -1,0 +1,47 @@
+/* Layout Container */
+.layoutContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background);
+}
+
+/* Layout Content - Below Header */
+.layoutContent {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Main Content Area */
+.mainContent {
+  min-height: 0; /* Allow content to scroll */
+  overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .layoutContent {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .layoutContent {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+}
+
+/* Full width layout (for pages that don't need sidebar) */
+.layoutContent.fullWidth {
+  grid-template-columns: 1fr;
+  max-width: 800px;
+}
