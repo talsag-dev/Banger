@@ -1,4 +1,4 @@
-import React from "react";
+import { useReducer } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import {
   MessageCircle,
@@ -26,7 +26,7 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
   onReaction,
   onComment,
 }) => {
-  const [{ isCommentsOpen }, dispatch] = React.useReducer(
+  const [{ isCommentsOpen }, dispatch] = useReducer(
     musicPostCardReducer,
     initialState
   );

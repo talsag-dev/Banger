@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { Switch } from "@headlessui/react";
 import { Button } from "../Button";
 import { Modal } from "../Modal";
@@ -18,17 +18,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onSettingsChange,
 }) => {
   const [currentSettings, setCurrentSettings] =
-    React.useState<UserSettings>(settings);
-  const settingItems = React.useMemo(() => getSettingItems(), []);
+    useState<UserSettings>(settings);
+  const settingItems = useMemo(() => getSettingItems(), []);
 
   // Only update settings when the modal opens, not on every settings change
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       setCurrentSettings(settings);
     }
   }, [isOpen, settings]);
 
-  const handleSettingChange = React.useCallback(
+  const handleSettingChange = useCallback(
     (settingId: keyof UserSettings, value: boolean) => {
       setCurrentSettings((prevSettings) => {
         const newSettings = updateSetting(prevSettings, settingId, value);
@@ -38,7 +38,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     []
   );
 
-  const handleSave = React.useCallback(async () => {
+  const handleSave = useCallback(async () => {
     try {
       await saveSettings(currentSettings);
       onSettingsChange?.(currentSettings);

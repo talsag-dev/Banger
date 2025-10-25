@@ -3,6 +3,14 @@ export interface SearchDialogProps {
   searchQuery: string;
   onClose: () => void;
   onSearchQueryChange: (query: string) => void;
+  // Data and state passed from container
+  isAuthenticated: boolean;
+  isCheckingAuth: boolean;
+  authError: Error | null;
+  searchResults: SearchResult[];
+  isSearching: boolean;
+  searchError: Error | null;
+  onAuthRedirect: () => void;
 }
 
 export interface SearchResult {

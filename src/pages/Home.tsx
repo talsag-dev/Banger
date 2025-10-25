@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppHeader } from "../components/AppHeader";
 import { SearchDialog } from "../components/SearchDialog";
@@ -6,6 +6,7 @@ import { NewPostModal } from "../components/NewPostModal";
 import { SettingsModal } from "../components/SettingsModal";
 import { Sidebar } from "../components/Sidebar";
 import { FeedContainer } from "../components/FeedContainer";
+import { useSearchData } from "../hooks/useSearchData";
 import type { Feed } from "../types/music";
 import "./Home.css";
 
@@ -72,7 +73,18 @@ export const Home: React.FC = () => {
   const [
     { isNewPostOpen, isSearchOpen, isSettingsOpen, searchQuery },
     dispatch,
-  ] = React.useReducer(homeReducer, initialState);
+  ] = useReducer(homeReducer, initialState);
+
+  // Search data and logic
+  const {
+    isAuthenticated,
+    isCheckingAuth,
+    authError,
+    searchResults,
+    isSearching,
+    searchError,
+    onAuthRedirect,
+  } = useSearchData(searchQuery);
 
   const {
     data: feed,
@@ -124,6 +136,14 @@ export const Home: React.FC = () => {
         onSearchQueryChange={(query) =>
           dispatch({ type: "SET_SEARCH_QUERY", payload: query })
         }
+        // Search data from hook
+        isAuthenticated={isAuthenticated}
+        isCheckingAuth={isCheckingAuth}
+        authError={authError}
+        searchResults={searchResults}
+        isSearching={isSearching}
+        searchError={searchError}
+        onAuthRedirect={onAuthRedirect}
       />
 
       <NewPostModal

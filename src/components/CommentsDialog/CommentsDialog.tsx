@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
@@ -18,8 +18,8 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
   postId,
   onComment,
 }) => {
-  const [commentText, setCommentText] = React.useState("");
-  const [showSkeleton, setShowSkeleton] = React.useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [showSkeleton, setShowSkeleton] = useState(false);
 
   const queryClient = useQueryClient();
 
