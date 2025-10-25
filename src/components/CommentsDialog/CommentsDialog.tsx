@@ -7,8 +7,10 @@ import {
   DialogBackdrop,
 } from "@headlessui/react";
 import { X } from "lucide-react";
+import { Button } from "../Button";
 import type { Comment } from "../../types/music";
 import type { CommentsDialogProps } from "./types";
+import styles from "./CommentsDialog.module.css";
 
 export const CommentsDialog: React.FC<CommentsDialogProps> = ({
   isOpen,
@@ -70,15 +72,19 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
 
   // Skeleton component for loading comments
   const CommentSkeleton = () => (
-    <div className="skeleton-comments">
+    <div className={styles.skeletonComments}>
       {[1, 2, 3].map((index) => (
-        <div key={index} className="skeleton-comment">
-          <div className="skeleton-avatar"></div>
-          <div className="skeleton-content">
-            <div className="skeleton-username"></div>
+        <div key={index} className={styles.skeletonComment}>
+          <div className={styles.skeletonAvatar}></div>
+          <div className={styles.skeletonContent}>
+            <div className={styles.skeletonUsername}></div>
             <div
-              className={`skeleton-text ${
-                index === 1 ? "long" : index === 2 ? "medium" : "short"
+              className={`${styles.skeletonText} ${
+                index === 1
+                  ? styles.long
+                  : index === 2
+                  ? styles.medium
+                  : styles.short
               }`}
             ></div>
           </div>
@@ -89,62 +95,69 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative" transition>
-      <DialogBackdrop className="dialog-overlay" transition />
+      <DialogBackdrop className={styles.dialogOverlay} transition />
 
-      <div className="dialog-container">
-        <div className="dialog-content">
-          <DialogPanel className="dialog-panel" transition>
-            <DialogTitle className="dialog-title">
+      <div className={styles.dialogContainer}>
+        <div className={styles.dialogContent}>
+          <DialogPanel className={styles.dialogPanel} transition>
+            <DialogTitle className={styles.dialogTitle}>
               Comments
-              <button onClick={onClose} className="dialog-close-btn">
-                <X size={20} />
-              </button>
+              <Button 
+                onClick={onClose} 
+                variant="ghost" 
+                size="sm"
+                leftIcon={<X size={20} />}
+                className={styles.dialogCloseBtn}
+              />
             </DialogTitle>
 
-            <div className="comments-container">
+            <div className={styles.commentsContainer}>
               {commentsLoading && showSkeleton ? (
                 <CommentSkeleton />
               ) : comments.length > 0 ? (
-                <div className="comments-list">
+                <div className={styles.commentsList}>
                   {comments.map((comment) => (
-                    <div key={comment.id} className="comment-item">
+                    <div key={comment.id} className={styles.commentItem}>
                       <img
                         src={comment.avatar}
                         alt={`${comment.username} avatar`}
-                        className="comment-avatar"
+                        className={styles.commentAvatar}
                       />
-                      <div className="comment-content">
-                        <span className="comment-username">
+                      <div className={styles.commentContent}>
+                        <span className={styles.commentUsername}>
                           @{comment.username}
                         </span>
-                        <p className="comment-text">{comment.content}</p>
+                        <p className={styles.commentText}>{comment.content}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="no-comments">
+                <p className={styles.noComments}>
                   No comments yet. Be the first to comment!
                 </p>
               )}
             </div>
 
-            <form onSubmit={handleComment} className="comment-form">
-              <div className="comment-form-container">
+            <form onSubmit={handleComment} className={styles.commentForm}>
+              <div className={styles.commentFormContainer}>
                 <input
                   type="text"
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                   placeholder="Add a comment..."
-                  className="comment-input"
+                  className={styles.commentInput}
                 />
-                <button
+                <Button
                   type="submit"
+                  variant="primary"
+                  size="sm"
                   disabled={postCommentMutation.isPending}
-                  className="comment-submit"
+                  loading={postCommentMutation.isPending}
+                  className={styles.commentSubmit}
                 >
                   {postCommentMutation.isPending ? "Posting..." : "Post"}
-                </button>
+                </Button>
               </div>
             </form>
           </DialogPanel>

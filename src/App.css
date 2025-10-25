@@ -1,15 +1,15 @@
 #root {
-  max-width: 1280px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--space-8);
   text-align: center;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: var(--space-24);
+  padding: var(--space-6);
   will-change: filter;
-  transition: filter 300ms;
+  transition: var(--transition-base);
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
@@ -34,9 +34,9 @@
 }
 
 .card {
-  padding: 2em;
+  padding: var(--space-8);
 }
 
 .read-the-docs {
-  color: #888;
+  color: var(--color-text-tertiary);
 }

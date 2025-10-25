@@ -1,0 +1,223 @@
+/* Settings Modal Styles */
+.modalDialog {
+  position: relative;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+}
+
+.modalContainer {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  padding: var(--space-16) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalPanel {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2xl);
+  width: 100%;
+  max-width: 450px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+}
+
+/* Transition Classes */
+.modalBackdropEnter {
+  transition: opacity 300ms ease-out;
+}
+
+.modalBackdropEnterFrom {
+  opacity: 0;
+}
+
+.modalBackdropEnterTo {
+  opacity: 1;
+}
+
+.modalBackdropLeave {
+  transition: opacity 200ms ease-in;
+}
+
+.modalBackdropLeaveFrom {
+  opacity: 1;
+}
+
+.modalBackdropLeaveTo {
+  opacity: 0;
+}
+
+.modalPanelEnter {
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.modalPanelEnterFrom {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.modalPanelEnterTo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modalPanelLeave {
+  transition: opacity 200ms ease-in, transform 200ms ease-in;
+}
+
+.modalPanelLeaveFrom {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modalPanelLeaveTo {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  transition: var(--transition-all);
+}
+
+.modalClose:hover {
+  background: var(--color-bg-muted);
+}
+
+.modalContent {
+  padding: var(--space-6);
+}
+
+.settingsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.settingItem {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.settingItem:last-child {
+  border-bottom: none;
+}
+
+.settingSwitch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  width: 48px;
+  height: 24px;
+  background: var(--color-bg-muted);
+  border-radius: 12px;
+  border: none;
+  transition: background-color 200ms ease;
+}
+
+.settingSwitch[data-checked] {
+  background: var(--color-primary);
+}
+
+.settingSwitch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 200ms ease;
+}
+
+.settingSwitch[data-checked]::after {
+  transform: translateX(24px);
+}
+
+.settingItemContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
+
+.settingInfo {
+  flex: 1;
+  margin-right: 16px;
+}
+
+.settingLabel {
+  display: block;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.settingDescription {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.settingsActions {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-light);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.settingsSaveBtn {
+  background: var(--color-info);
+  color: var(--color-text-inverse);
+  border: none;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-all);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settingsSaveBtn:hover {
+  background: var(--color-info-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}

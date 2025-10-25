@@ -8,6 +8,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { clsx } from "clsx";
+import { Button } from "../Button";
 import {
   REACTION_MAP,
   AVAILABLE_REACTIONS,
@@ -16,7 +17,7 @@ import {
 import type { MusicPostCardProps } from "./types";
 import { initialState, musicPostCardReducer } from "./reducer";
 import { formatDuration, getTimeAgo } from "./utils";
-import "./MusicPostCard.css";
+import styles from "./MusicPostCard.module.css";
 import { CommentsDialog } from "../CommentsDialog";
 import { PlatformIcon } from "../PlatformIcon";
 
@@ -43,39 +44,41 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
   } = post;
 
   return (
-    <div className="music-post-card">
-      <div className="post-header">
-        <div className="user-info">
+    <div className={styles.musicPostCard}>
+      <div className={styles.postHeader}>
+        <div className={styles.userInfo}>
           <img
             src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`}
             alt="User avatar"
-            className="user-avatar"
+            className={styles.userAvatar}
           />
           <div>
-            <h4 className="username">@{userId}</h4>
-            <span className="timestamp">{getTimeAgo(timestamp)}</span>
+            <h4 className={styles.username}>@{userId}</h4>
+            <span className={styles.timestamp}>{getTimeAgo(timestamp)}</span>
           </div>
         </div>
         {isCurrentlyListening && (
-          <div className="currently-listening">
-            <Music className="pulse-icon" size={16} />
+          <div className={styles.currentlyListening}>
+            <Music className={styles.pulseIcon} size={16} />
             <span>Currently listening</span>
           </div>
         )}
       </div>
 
-      <div className="track-info">
+      <div className={styles.trackInfo}>
         <img
           src={track.albumCover}
           alt={`${track.album} cover`}
-          className="album-cover"
+          className={styles.albumCover}
         />
-        <div className="track-details">
-          <h3 className="track-title">{track.title}</h3>
-          <p className="track-artist">{track.artist}</p>
-          <p className="track-album">{track.album}</p>
-          <div className="track-meta">
-            <span className="duration">{formatDuration(track.duration)}</span>
+        <div className={styles.trackDetails}>
+          <h3 className={styles.trackTitle}>{track.title}</h3>
+          <p className={styles.trackArtist}>{track.artist}</p>
+          <p className={styles.trackAlbum}>{track.album}</p>
+          <div className={styles.trackMeta}>
+            <span className={styles.duration}>
+              {formatDuration(track.duration)}
+            </span>
             <PlatformIcon
               platform={track.platform}
               size={16}
@@ -85,7 +88,7 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
               href={track.externalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="external-link"
+              className={styles.externalLink}
             >
               <ExternalLink size={14} />
               Listen
@@ -94,94 +97,110 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
         </div>
       </div>
 
-      {feeling && <div className="post-feeling">{feeling}</div>}
+      {feeling && <div className={styles.postFeeling}>{feeling}</div>}
 
-      {caption && <div className="post-caption">{caption}</div>}
+      {caption && <div className={styles.postCaption}>{caption}</div>}
 
-      <div className="post-actions">
+      <div className={styles.postActions}>
         {/* Reactions Menu using Headless UI */}
-        <Menu as="div" className="relative">
-          <MenuButton className="reactions-menu-btn">
-            <span className="reaction-trigger">
+        <Menu as="div" className={styles.relative}>
+          <MenuButton className={styles.reactionsMenuBtn}>
+            <span className={styles.reactionTrigger}>
               {reactions.length > 0
                 ? getReactionEmoji(reactions[0].type)
                 : "❤️"}
             </span>
             {reactions.length > 0 && (
-              <span className="reaction-count">{reactions.length}</span>
+              <span className={styles.reactionCount}>{reactions.length}</span>
             )}
           </MenuButton>
-          <MenuItems className="reactions-menu">
+          <MenuItems className={styles.reactionsMenu}>
             {AVAILABLE_REACTIONS.map((reactionType) => (
               <MenuItem key={reactionType}>
                 {({ focus }) => (
-                  <button
+                  <Button
                     onClick={() => onReaction(id, reactionType)}
+                    variant="ghost"
+                    size="sm"
                     className={clsx(
-                      "reaction-menu-item",
-                      focus && "reaction-menu-item-active"
+                      styles.reactionMenuItem,
+                      focus && styles.reactionMenuItemActive
                     )}
                   >
                     {REACTION_MAP[reactionType]}
-                  </button>
+                  </Button>
                 )}
               </MenuItem>
             ))}
           </MenuItems>
         </Menu>
 
-        <div className="action-buttons">
-          <button
-            className="action-btn"
+        <div className={styles.actionButtons}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={styles.actionBtn}
             onClick={() => dispatch({ type: "OPEN_COMMENTS" })}
+            leftIcon={<MessageCircle size={18} />}
           >
-            <MessageCircle size={18} />
             {comments.length > 0 && (
-              <span className="count">{comments.length}</span>
+              <span className={styles.count}>{comments.length}</span>
             )}
-          </button>
+          </Button>
 
           {/* Share Menu using Headless UI */}
-          <Menu as="div" className="relative share-menu-container">
-            <MenuButton className="action-btn">
+          <Menu
+            as="div"
+            className={`${styles.relative} ${styles.shareMenuContainer}`}
+          >
+            <MenuButton className={styles.actionBtn}>
               <Share2 size={18} />
               <MoreHorizontal size={14} />
             </MenuButton>
-            <MenuItems className="share-menu">
+            <MenuItems className={styles.shareMenu}>
               <MenuItem>
                 {({ focus }) => (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    fullWidth
                     className={clsx(
-                      "share-menu-item",
-                      focus && "share-menu-item-active"
+                      styles.shareMenuItem,
+                      focus && styles.shareMenuItemActive
                     )}
                   >
                     Copy Link
-                  </button>
+                  </Button>
                 )}
               </MenuItem>
               <MenuItem>
                 {({ focus }) => (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    fullWidth
                     className={clsx(
-                      "share-menu-item",
-                      focus && "share-menu-item-active"
+                      styles.shareMenuItem,
+                      focus && styles.shareMenuItemActive
                     )}
                   >
                     Share to Twitter
-                  </button>
+                  </Button>
                 )}
               </MenuItem>
               <MenuItem>
                 {({ focus }) => (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    fullWidth
                     className={clsx(
-                      "share-menu-item",
-                      focus && "share-menu-item-active"
+                      styles.shareMenuItem,
+                      focus && styles.shareMenuItemActive
                     )}
                   >
                     Share to Instagram
-                  </button>
+                  </Button>
                 )}
               </MenuItem>
             </MenuItems>

@@ -1,0 +1,149 @@
+/* Modal Components */
+.modalDialog {
+  position: relative;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+}
+
+.modalContainer {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  padding: var(--space-16) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalPanel {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2xl);
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+}
+
+/* Transition Classes */
+.newpostBackdropEnter {
+  transition: opacity 300ms ease-out;
+}
+
+.newpostBackdropEnterFrom {
+  opacity: 0;
+}
+
+.newpostBackdropEnterTo {
+  opacity: 1;
+}
+
+.newpostBackdropLeave {
+  transition: opacity 200ms ease-in;
+}
+
+.newpostBackdropLeaveFrom {
+  opacity: 1;
+}
+
+.newpostBackdropLeaveTo {
+  opacity: 0;
+}
+
+.newpostPanelEnter {
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.newpostPanelEnterFrom {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.newpostPanelEnterTo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.newpostPanelLeave {
+  transition: opacity 200ms ease-in, transform 200ms ease-in;
+}
+
+.newpostPanelLeaveFrom {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.newpostPanelLeaveTo {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  transition: var(--transition-all);
+}
+
+.modalClose:hover {
+  background: var(--color-bg-muted);
+}
+
+.modalContent {
+  padding: var(--space-6);
+}
+
+.platformButtons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.platformBtn {
+  padding: var(--space-3) var(--space-5);
+  border: none;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.platformBtnSpotify {
+  background: var(--color-spotify);
+  padding: var(--space-3) var(--space-5);
+  color: var(--color-text-inverse);
+}
+
+.platformBtnApple {
+  background: var(--color-apple-music);
+  padding: var(--space-3) var(--space-5);
+  color: var(--color-text-inverse);
+}
+
+.platformBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}

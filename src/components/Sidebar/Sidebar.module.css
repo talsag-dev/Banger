@@ -1,0 +1,133 @@
+/* Sidebar Styles */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.sidebarSection {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xl);
+}
+
+.sidebarSection h3 {
+  margin: 0 0 var(--space-4) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+/* Trending Styles */
+.trendingList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.trendingItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: var(--transition-all);
+  cursor: pointer;
+}
+
+.trendingItem:hover {
+  background: var(--color-bg-muted);
+}
+
+.trendingEmoji {
+  font-size: var(--font-size-xl);
+}
+
+/* Quick Actions Styles */
+.quickActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.quickActionBtn {
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.spotify {
+  background: var(--color-spotify);
+  color: var(--color-text-inverse);
+}
+
+.apple {
+  background: var(--color-apple-music);
+  color: var(--color-text-inverse);
+}
+
+.share {
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+
+.quickActionBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Active Friends Styles */
+.activeFriends {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.friendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: var(--transition-all);
+  cursor: pointer;
+}
+
+.friendItem:hover {
+  background: var(--color-bg-muted);
+}
+
+.friendAvatar {
+  width: var(--avatar-size-lg);
+  height: var(--avatar-size-lg);
+  border-radius: var(--radius-full);
+}
+
+.friendInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.friendName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.friendStatus {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* Responsive Design for Sidebar */
+@media (max-width: 768px) {
+  .sidebar {
+    order: -1;
+  }
+}

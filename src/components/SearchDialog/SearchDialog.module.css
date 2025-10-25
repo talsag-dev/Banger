@@ -1,0 +1,154 @@
+/* Headless UI Search Dialog */
+.searchDialog {
+  position: relative;
+}
+
+.searchBackdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+}
+
+.searchDialogContainer {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  padding: var(--space-16) var(--space-4);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.searchPanel {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2xl);
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+}
+
+/* Transition Classes */
+.searchBackdropEnter {
+  transition: opacity 300ms ease-out;
+}
+
+.searchBackdropEnterFrom {
+  opacity: 0;
+}
+
+.searchBackdropEnterTo {
+  opacity: 1;
+}
+
+.searchBackdropLeave {
+  transition: opacity 200ms ease-in;
+}
+
+.searchBackdropLeaveFrom {
+  opacity: 1;
+}
+
+.searchBackdropLeaveTo {
+  opacity: 0;
+}
+
+.searchPanelEnter {
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.searchPanelEnterFrom {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.searchPanelEnterTo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.searchPanelLeave {
+  transition: opacity 200ms ease-in, transform 200ms ease-in;
+}
+
+.searchPanelLeaveFrom {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.searchPanelLeaveTo {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.searchInputContainer {
+  display: flex;
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border-light);
+  gap: var(--space-3);
+}
+
+.searchInputIcon {
+  color: var(--color-text-secondary);
+}
+
+.searchComboboxInput {
+  flex: 1;
+  border: none;
+  font-size: var(--font-size-base);
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+.searchCloseBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  transition: var(--transition-all);
+}
+
+.searchCloseBtn:hover {
+  background: var(--color-bg-muted);
+}
+
+.searchResults {
+  max-height: var(--space-100);
+  overflow-y: auto;
+  padding: var(--space-4) 0;
+}
+
+.searchSection {
+  padding: 0 var(--space-5) var(--space-4);
+}
+
+.searchSection h4 {
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.searchOption {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  transition: var(--transition-all);
+  margin-bottom: var(--space-1);
+}
+
+.searchOption:hover {
+  background: var(--color-bg-muted);
+}
