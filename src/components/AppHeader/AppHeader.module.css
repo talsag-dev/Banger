@@ -41,7 +41,8 @@
 }
 
 @keyframes gradientSlide {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {

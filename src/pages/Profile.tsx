@@ -1,6 +1,6 @@
 import { useReducer, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { User, Music, Heart, Edit3 } from "lucide-react";
+import { User, Music, Heart } from "lucide-react";
 import { Button } from "../components/Button";
 import { Text } from "../components/Text";
 import { MusicPostCard } from "../components/MusicPostCard";
