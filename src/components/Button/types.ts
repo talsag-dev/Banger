@@ -1,6 +1,6 @@
 export interface ButtonProps {
   children?: React.ReactNode;
-  variant?: "primary" | "secondary" | "danger" | "ghost";
+  variant?: "primary" | "secondary" | "danger" | "ghost" | "icon";
   size?: "xs" | "sm" | "md" | "lg";
   type?: "button" | "submit" | "reset";
   disabled?: boolean;

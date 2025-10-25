@@ -1,6 +1,7 @@
 import React from "react";
 import { MusicPostCard } from "../MusicPostCard";
 import { Button } from "../Button";
+import { Text } from "../Text";
 import type {
   FeedContainerProps,
   EmptyFeedProps,
@@ -26,11 +27,13 @@ const EmptyFeed: React.FC<EmptyFeedProps> = ({ onDiscoverPeople }) => {
   return (
     <div className={styles.emptyFeed}>
       <div className={styles.emptyIcon}>🎵</div>
-      <h3>Your feed is quiet</h3>
-      <p>
+      <Text variant="title" align="center">
+        Your feed is quiet
+      </Text>
+      <Text variant="body" color="secondary" align="center">
         Connect with friends or follow some music lovers to see their posts
         here!
-      </p>
+      </Text>
       <Button
         variant="primary"
         size="md"
@@ -63,13 +66,17 @@ const FeedContent: React.FC<FeedContentProps> = ({
 const LoadingState: React.FC = () => (
   <div className={styles.loading}>
     <div className={styles.loadingSpinner}></div>
-    <p>{getLoadingMessage()}</p>
+    <Text variant="body" color="secondary">
+      {getLoadingMessage()}
+    </Text>
   </div>
 );
 
 const ErrorState: React.FC<{ error?: Error | null }> = ({ error }) => (
   <div className={styles.error}>
-    <p>{getErrorMessage(error)}</p>
+    <Text variant="body" color="error">
+      {getErrorMessage(error)}
+    </Text>
   </div>
 );
 
@@ -100,8 +107,12 @@ export const FeedContainer: React.FC<FeedContainerProps> = ({
   return (
     <div className={styles.feedContainer}>
       <div className={styles.feedHeader}>
-        <h2>Your Music Feed</h2>
-        <p>See what your friends are listening to and feeling</p>
+        <Text variant="subheadline" as="h2">
+          Your Music Feed
+        </Text>
+        <Text variant="body" color="secondary">
+          See what your friends are listening to and feeling
+        </Text>
       </div>
 
       {feed?.posts.length === 0 ? (

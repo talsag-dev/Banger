@@ -86,31 +86,14 @@
   --color-border-dark: var(--color-gray-400);
   --color-border-focus: var(--color-accent);
 
-  /* Gradients - More Subtle */
-  --gradient-primary: linear-gradient(
-    135deg,
-    var(--color-gray-50) 0%,
-    var(--color-gray-100) 100%
-  );
-  --gradient-accent: linear-gradient(
+  /* Gradients */
+  --gradient-rainbow: linear-gradient(
     45deg,
-    var(--color-accent),
-    var(--color-accent-light)
-  );
-  --gradient-success: linear-gradient(
-    45deg,
-    var(--color-success),
-    var(--color-success-light)
-  );
-  --gradient-spotify: linear-gradient(
-    45deg,
-    var(--color-spotify),
-    var(--color-spotify-light)
-  );
-  --gradient-apple: linear-gradient(
-    45deg,
-    var(--color-apple-music),
-    var(--color-apple-music-light)
+    #ff6b6b,
+    #4ecdc4,
+    #45b7d1,
+    #96ceb4,
+    #ffeaa7
   );
   --gradient-background: linear-gradient(
     135deg,

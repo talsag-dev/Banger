@@ -104,10 +104,10 @@
   padding: var(--space-1);
   border-radius: var(--radius-md);
   transition: var(--transition-all);
-}
 
-.modalClose:hover {
-  background: var(--color-bg-muted);
+  &:hover {
+    background: var(--color-bg-muted);
+  }
 }
 
 .modalContent {
@@ -129,6 +129,11 @@
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: var(--transition-all);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+  }
 }
 
 .platformBtnSpotify {
@@ -141,9 +146,4 @@
   background: var(--color-apple-music);
   padding: var(--space-3) var(--space-5);
   color: var(--color-text-inverse);
-}
-
-.platformBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
 }

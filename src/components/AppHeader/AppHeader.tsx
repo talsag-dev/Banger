@@ -2,6 +2,7 @@ import React from "react";
 import { Search, Plus, User, Bell } from "lucide-react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { Button } from "../Button";
+import { Text } from "../Text";
 import type { AppHeaderProps } from "./types";
 import styles from "./AppHeader.module.css";
 
@@ -13,29 +14,36 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   return (
     <header className={styles.appHeader}>
       <div className={styles.headerContent}>
-        <h1 className={styles.appTitle}>Banger</h1>
+        <Text variant="title" weight="bold" as="h1" className={styles.appTitle}>
+          Banger
+        </Text>
         <div className={styles.headerActions}>
-          <button onClick={onSearchClick} className={styles.searchContainer}>
-            <Search size={20} className="search-icon" />
-            <span className={styles.searchPlaceholder}>
+          <div className={styles.searchContainer} onClick={onSearchClick}>
+            <Search size={16} className={styles.searchIcon} />
+            <Text
+              variant="caption"
+              color="muted"
+              className={styles.searchPlaceholder}
+            >
               Search music, friends, or feelings...
-            </span>
-          </button>
+            </Text>
+          </div>
+          <Button
+            onClick={onSearchClick}
+            variant="icon"
+            size="sm"
+            leftIcon={<Search size={20} />}
+            className={styles.mobileSearchBtn}
+          />
           <Button
             onClick={onNewPostClick}
-            variant="ghost"
+            variant="icon"
             size="sm"
             leftIcon={<Plus size={20} />}
-            className={styles.headerBtn}
           />
-          <Button
-            variant="ghost"
-            size="sm"
-            leftIcon={<Bell size={20} />}
-            className={styles.headerBtn}
-          />
+          <Button variant="icon" size="sm" leftIcon={<Bell size={20} />} />
           <Popover className={styles.userMenuPopover}>
-            <PopoverButton className={styles.userMenuButton}>
+            <PopoverButton as={Button} variant="icon" size="sm">
               <User size={20} />
             </PopoverButton>
             <PopoverPanel
@@ -50,7 +58,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   variant="ghost"
                   size="sm"
                   fullWidth
-                  className={styles.userMenuItem}
+                  className={styles.menuButton}
                 >
                   Profile
                 </Button>
@@ -58,8 +66,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   variant="ghost"
                   size="sm"
                   fullWidth
-                  className={styles.userMenuItem}
                   onClick={onSettingsClick}
+                  className={styles.menuButton}
                 >
                   Settings
                 </Button>
@@ -67,16 +75,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   variant="ghost"
                   size="sm"
                   fullWidth
-                  className={styles.userMenuItem}
+                  className={styles.menuButton}
                 >
                   Help
                 </Button>
-                <hr className={styles.userMenuSeparator} />
                 <Button
                   variant="ghost"
                   size="sm"
                   fullWidth
-                  className={styles.userMenuItem}
+                  className={styles.menuButton}
                 >
                   Sign Out
                 </Button>

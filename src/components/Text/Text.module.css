@@ -1,0 +1,176 @@
+/* Text Base Styles */
+.text {
+  margin: 0;
+  line-height: var(--line-height-normal);
+  font-family: var(--font-family-sans);
+}
+
+/* Variant Styles */
+.variantHeadline {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.variantSubheadline {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.variantTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+}
+
+.variantSubtitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-snug);
+}
+
+.variantBody {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-relaxed);
+}
+
+.variantCaption {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.variantOverline {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+}
+
+/* Size Overrides */
+.sizeXs {
+  font-size: var(--font-size-xs);
+}
+
+.sizeSm {
+  font-size: var(--font-size-sm);
+}
+
+.sizeMd {
+  font-size: var(--font-size-base);
+}
+
+.sizeLg {
+  font-size: var(--font-size-lg);
+}
+
+.sizeXl {
+  font-size: var(--font-size-xl);
+}
+
+.size2xl {
+  font-size: var(--font-size-2xl);
+}
+
+.size3xl {
+  font-size: var(--font-size-3xl);
+}
+
+/* Weight Overrides */
+.weightLight {
+  font-weight: var(--font-weight-light);
+}
+
+.weightNormal {
+  font-weight: var(--font-weight-normal);
+}
+
+.weightMedium {
+  font-weight: var(--font-weight-medium);
+}
+
+.weightSemibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.weightBold {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Color Variants */
+.colorPrimary {
+  color: var(--color-text-primary);
+}
+
+.colorSecondary {
+  color: var(--color-text-secondary);
+}
+
+.colorMuted {
+  color: var(--color-text-muted);
+}
+
+.colorInverse {
+  color: var(--color-text-inverse);
+}
+
+.colorSuccess {
+  color: var(--color-success);
+}
+
+.colorWarning {
+  color: var(--color-warning);
+}
+
+.colorError {
+  color: var(--color-error);
+}
+
+/* Alignment */
+.alignLeft {
+  text-align: left;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.alignJustify {
+  text-align: justify;
+}
+
+/* Utilities */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .variantHeadline {
+    font-size: var(--font-size-3xl);
+  }
+
+  .variantSubheadline {
+    font-size: var(--font-size-2xl);
+  }
+
+  .variantTitle {
+    font-size: var(--font-size-xl);
+  }
+
+  .variantSubtitle {
+    font-size: var(--font-size-base);
+  }
+}

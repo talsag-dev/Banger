@@ -19,13 +19,10 @@
 
 .appTitle {
   margin: 0;
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  background: var(--gradient-primary);
+  background: var(--gradient-rainbow);
   background-clip: text;
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-decoration: none;
+  color: transparent;
 }
 
 .headerActions {
@@ -34,96 +31,47 @@
   gap: var(--space-4);
 }
 
+.mobileSearchBtn {
+  display: none;
+}
+
 .searchContainer {
   display: flex;
   align-items: center;
-  background: var(--color-bg-primary);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   transition: var(--transition-all);
-  width: var(--space-18_75);
-  gap: var(--space-3);
+  min-width: 280px;
+
+  &:hover {
+    border-color: var(--color-border-medium);
+    background: var(--color-bg-primary);
+  }
+
+  &:focus-within {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-focus);
+  }
 }
 
-.searchContainer:hover {
-  border-color: var(--color-border-focus);
-  box-shadow: var(--shadow-focus);
+.searchIcon {
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
 }
 
 .searchPlaceholder {
   color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
-}
-
-.headerBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--space-10);
-  height: var(--space-10);
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: var(--transition-all);
-  color: var(--color-text-secondary);
-}
-
-.headerBtn:hover {
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
-  border-color: var(--color-primary);
-  transform: scale(1.05);
-  box-shadow: var(--shadow-md);
-}
-
-/* Responsive Design for Header */
-@media (max-width: 768px) {
-  .headerContent {
-    padding: var(--space-3) var(--space-4);
-  }
-
-  .searchContainer {
-    width: var(--space-10);
-    height: var(--space-10);
-    padding: var(--space-2);
-    border-radius: var(--radius-full);
-    justify-content: center;
-  }
-
-  .searchPlaceholder {
-    display: none;
-  }
+  user-select: none;
 }
 
 /* User Menu Popover Styles */
 .userMenuPopover {
   position: relative;
-}
-
-.userMenuButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--space-10);
-  height: var(--space-10);
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: var(--transition-all);
-  color: var(--color-text-secondary);
-}
-
-.userMenuButton:hover,
-.userMenuButton[data-headlessui-state="open"] {
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
-  border-color: var(--color-primary);
-  transform: scale(1.05);
-  box-shadow: var(--shadow-md);
 }
 
 .userMenuPanel {
@@ -140,30 +88,33 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-}
 
-.userMenuItem {
-  display: flex;
-  align-items: center;
-  padding: var(--space-2) var(--space-3);
-  background: none;
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: var(--transition-all);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  text-align: left;
-  width: 100%;
-}
-
-.userMenuItem:hover {
-  background: var(--color-bg-muted);
-  color: var(--color-primary);
+  & .menuButton {
+    justify-content: flex-start;
+  }
 }
 
 .userMenuSeparator {
   border: none;
   border-top: 1px solid var(--color-border-light);
   margin: var(--space-1) 0;
+}
+
+/* Responsive Design for Header */
+@media (max-width: 768px) {
+  .headerContent {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .searchContainer {
+    display: none;
+  }
+
+  .mobileSearchBtn {
+    display: flex;
+  }
+
+  .headerActions {
+    gap: var(--space-3);
+  }
 }

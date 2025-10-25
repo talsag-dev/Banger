@@ -7,12 +7,12 @@
   transition: var(--transition-all);
   border: 1px solid var(--color-border-light);
   overflow: visible;
-}
 
-.musicPostCard:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
-  border-color: var(--color-border-medium);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--color-border-medium);
+  }
 }
 
 .postHeader {
@@ -64,16 +64,6 @@
 
 .pulseIcon {
   animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
 }
 
 .trackInfo {
@@ -136,10 +126,10 @@
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   transition: var(--transition-all);
-}
 
-.externalLink:hover {
-  color: var(--color-spotify-light);
+  &:hover {
+    color: var(--color-spotify-light);
+  }
 }
 
 .postFeeling {
@@ -192,11 +182,11 @@
   padding: var(--space-2);
   border-radius: var(--radius-lg);
   transition: var(--transition-all);
-}
 
-.actionBtn:hover {
-  background: var(--color-bg-muted);
-  color: var(--color-text-primary);
+  &:hover {
+    background: var(--color-bg-muted);
+    color: var(--color-text-primary);
+  }
 }
 
 .count {
@@ -218,11 +208,11 @@
   font-size: 14px;
   font-weight: 500;
   color: #666;
-}
 
-.reactionsMenuBtn:hover {
-  background: #f5f5f5;
-  color: #333;
+  &:hover {
+    background: #f5f5f5;
+    color: #333;
+  }
 }
 
 .reactionTrigger {
@@ -250,9 +240,13 @@
   padding: 8px;
   border-radius: 8px;
   transition: all 0.2s ease;
+
+  &:hover {
+    background: #f0f8ff;
+    transform: scale(1.1);
+  }
 }
 
-.reactionMenuItem:hover,
 .reactionMenuItemActive {
   background: #f0f8ff;
   transform: scale(1.1);
@@ -284,9 +278,12 @@
   font-size: 14px;
   color: #333;
   transition: background 0.2s ease;
+
+  &:hover {
+    background: #f5f5f5;
+  }
 }
 
-.shareMenuItem:hover,
 .shareMenuItemActive {
   background: #f5f5f5;
 }

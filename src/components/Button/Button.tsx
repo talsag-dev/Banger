@@ -24,6 +24,7 @@ export const Button: React.FC<ButtonProps> = ({
     secondary: styles.variantSecondary,
     danger: styles.variantDanger,
     ghost: styles.variantGhost,
+    icon: styles.variantIcon,
     spotify: styles.variantSpotify,
     apple: styles.variantApple,
   };

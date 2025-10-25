@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../Button";
+import { Text } from "../Text";
 import type { SidebarProps, QuickActionType } from "./types";
 import {
   getTrendingData,
@@ -34,7 +35,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sidebarSection}>
-        <h3>Trending Now</h3>
+        <Text variant="subtitle" as="h3">
+          Trending Now
+        </Text>
         <div className={styles.trendingList}>
           {trendingData.map((item) => (
             <div
@@ -43,14 +46,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => onTrendingClick?.(item.id)}
             >
               <span className={styles.trendingEmoji}>{item.emoji}</span>
-              <span>{item.title}</span>
+              <Text variant="body">{item.title}</Text>
             </div>
           ))}
         </div>
       </div>
 
       <div className={styles.sidebarSection}>
-        <h3>Quick Actions</h3>
+        <Text variant="subtitle" as="h3">
+          Quick Actions
+        </Text>
         <div className={styles.quickActions}>
           {quickActions.map((action) => {
             const config = getQuickActionConfig(action);
@@ -59,9 +64,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 key={action}
                 size="sm"
                 fullWidth
-                className={`${styles.quickActionBtn} ${
-                  styles[config.className]
-                }`}
                 onClick={() => handleQuickActionClick(action)}
               >
                 {config.text}
@@ -72,7 +74,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className={styles.sidebarSection}>
-        <h3>Active Friends</h3>
+        <Text variant="subtitle" as="h3">
+          Active Friends
+        </Text>
         <div className={styles.activeFriends}>
           {activeFriends.map((friend) => (
             <div
@@ -86,8 +90,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 className={styles.friendAvatar}
               />
               <div className={styles.friendInfo}>
-                <span className={styles.friendName}>{friend.name}</span>
-                <span className={styles.friendStatus}>{friend.status}</span>
+                <Text variant="body" className={styles.friendName}>
+                  {friend.name}
+                </Text>
+                <Text
+                  variant="caption"
+                  color="secondary"
+                  className={styles.friendStatus}
+                >
+                  {friend.status}
+                </Text>
               </div>
             </div>
           ))}

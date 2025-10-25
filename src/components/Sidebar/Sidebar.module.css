@@ -11,13 +11,13 @@
   border-radius: var(--radius-xl);
   padding: var(--space-5);
   box-shadow: var(--shadow-xl);
-}
 
-.sidebarSection h3 {
-  margin: 0 0 var(--space-4) 0;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
+  & h3 {
+    margin: 0 0 var(--space-4) 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+  }
 }
 
 /* Trending Styles */
@@ -35,10 +35,10 @@
   border-radius: var(--radius-md);
   transition: var(--transition-all);
   cursor: pointer;
-}
 
-.trendingItem:hover {
-  background: var(--color-bg-muted);
+  &:hover {
+    background: var(--color-bg-muted);
+  }
 }
 
 .trendingEmoji {
@@ -60,26 +60,26 @@
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: var(--transition-all);
-}
 
-.spotify {
-  background: var(--color-spotify);
-  color: var(--color-text-inverse);
-}
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
 
-.apple {
-  background: var(--color-apple-music);
-  color: var(--color-text-inverse);
-}
+  &.spotify {
+    background: var(--color-spotify);
+    color: var(--color-text-inverse);
+  }
 
-.share {
-  background: var(--color-accent);
-  color: var(--color-text-inverse);
-}
+  &.apple {
+    background: var(--color-apple-music);
+    color: var(--color-text-inverse);
+  }
 
-.quickActionBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  &.share {
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+  }
 }
 
 /* Active Friends Styles */
@@ -97,10 +97,10 @@
   border-radius: var(--radius-md);
   transition: var(--transition-all);
   cursor: pointer;
-}
 
-.friendItem:hover {
-  background: var(--color-bg-muted);
+  &:hover {
+    background: var(--color-bg-muted);
+  }
 }
 
 .friendAvatar {

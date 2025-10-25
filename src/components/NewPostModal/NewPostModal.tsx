@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  Transition,
-  TransitionChild,
-} from "@headlessui/react";
-import { X } from "lucide-react";
 import { Button } from "../Button";
+import { Modal } from "../Modal";
 import type { NewPostModalProps } from "./types";
 import { handlePlatformConnection } from "./utils";
 import styles from "./NewPostModal.module.css";
@@ -37,69 +30,36 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
   };
 
   return (
-    <Transition show={isOpen}>
-      <Dialog onClose={onClose} className={styles.modalDialog}>
-        <TransitionChild
-          enter={styles.newpostBackdropEnter}
-          enterFrom={styles.newpostBackdropEnterFrom}
-          enterTo={styles.newpostBackdropEnterTo}
-          leave={styles.newpostBackdropLeave}
-          leaveFrom={styles.newpostBackdropLeaveFrom}
-          leaveTo={styles.newpostBackdropLeaveTo}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Share What You're Listening To"
+      size="md"
+    >
+      <p>
+        Connect your music platforms to share what you're currently listening
+        to!
+      </p>
+      <div className={styles.platformButtons}>
+        <Button
+          variant="primary"
+          size="md"
+          fullWidth
+          className={styles.platformBtnSpotify}
+          onClick={handleSpotifyConnect}
         >
-          <div className={styles.modalBackdrop} />
-        </TransitionChild>
-
-        <div className={styles.modalContainer}>
-          <TransitionChild
-            enter={styles.newpostPanelEnter}
-            enterFrom={styles.newpostPanelEnterFrom}
-            enterTo={styles.newpostPanelEnterTo}
-            leave={styles.newpostPanelLeave}
-            leaveFrom={styles.newpostPanelLeaveFrom}
-            leaveTo={styles.newpostPanelLeaveTo}
-          >
-            <DialogPanel className={styles.modalPanel}>
-              <div className={styles.modalHeader}>
-                <DialogTitle className={styles.modalTitle}>
-                  Share What You're Listening To
-                </DialogTitle>
-                <Button
-                  onClick={onClose}
-                  variant="ghost"
-                  size="sm"
-                  leftIcon={<X size={20} />}
-                  className={styles.modalClose}
-                />
-              </div>
-              <div className={styles.modalContent}>
-                <p>
-                  Connect your music platforms to share what you're currently
-                  listening to!
-                </p>
-                <div className={styles.platformButtons}>
-                  <Button
-                    size="md"
-                    fullWidth
-                    className={styles.platformBtnSpotify}
-                    onClick={handleSpotifyConnect}
-                  >
-                    Connect Spotify
-                  </Button>
-                  <Button
-                    size="md"
-                    fullWidth
-                    className={styles.platformBtnApple}
-                    onClick={handleAppleMusicConnect}
-                  >
-                    Connect Apple Music
-                  </Button>
-                </div>
-              </div>
-            </DialogPanel>
-          </TransitionChild>
-        </div>
-      </Dialog>
-    </Transition>
+          Connect Spotify
+        </Button>
+        <Button
+          variant="primary"
+          size="md"
+          fullWidth
+          className={styles.platformBtnApple}
+          onClick={handleAppleMusicConnect}
+        >
+          Connect Apple Music
+        </Button>
+      </div>
+    </Modal>
   );
 };

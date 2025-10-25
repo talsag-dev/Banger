@@ -54,11 +54,11 @@
   padding: var(--space-1);
   border-radius: var(--radius-md);
   transition: var(--transition-all);
-}
 
-.dialogCloseBtn:hover {
-  background: var(--color-bg-muted);
-  color: var(--color-text-primary);
+  &:hover {
+    background: var(--color-bg-muted);
+    color: var(--color-text-primary);
+  }
 }
 
 .commentsContainer {
@@ -129,12 +129,12 @@
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
   transition: var(--transition-all);
-}
 
-.commentInput:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-focus);
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-focus);
+  }
 }
 
 .commentSubmit {
@@ -147,17 +147,17 @@
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: var(--transition-all);
-}
 
-.commentSubmit:hover:not(:disabled) {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
+  &:hover:not(:disabled) {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
 
-.commentSubmit:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 /* Skeleton Loading Styles */
@@ -200,18 +200,18 @@
   background: var(--color-bg-muted);
   border-radius: var(--radius-sm);
   animation: pulse 1.5s ease-in-out infinite;
-}
 
-.skeletonText.short {
-  width: 60%;
-}
+  &.short {
+    width: 60%;
+  }
 
-.skeletonText.medium {
-  width: 80%;
-}
+  &.medium {
+    width: 80%;
+  }
 
-.skeletonText.long {
-  width: 95%;
+  &.long {
+    width: 95%;
+  }
 }
 
 @keyframes pulse {
