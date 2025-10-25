@@ -14,14 +14,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onQuickAction,
   onTrendingClick,
   onFriendClick,
+  isSpotifyConnected = false,
+  isAppleConnected = false,
 }) => {
   const trendingData = getTrendingData();
   const activeFriends = getActiveFriends();
-  const quickActions: QuickActionType[] = [
+  
+  // Filter out connected services from quick actions
+  const allQuickActions: QuickActionType[] = [
     "connect-spotify",
-    "connect-apple",
+    "connect-apple", 
     "share-music",
   ];
+  
+  const quickActions = allQuickActions.filter(action => {
+    if (action === "connect-spotify" && isSpotifyConnected) return false;
+    if (action === "connect-apple" && isAppleConnected) return false;
+    return true;
+  });
 
   const handleQuickActionClick = async (action: QuickActionType) => {
     try {

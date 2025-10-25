@@ -2,6 +2,8 @@ export interface SidebarProps {
   onQuickAction?: (action: QuickActionType) => void;
   onTrendingClick?: (trendingId: string) => void;
   onFriendClick?: (friendId: string) => void;
+  isSpotifyConnected?: boolean;
+  isAppleConnected?: boolean;
 }
 
 export interface TrendingItem {

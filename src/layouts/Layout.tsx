@@ -121,6 +121,8 @@ export const Layout: React.FC<LayoutProps> = ({
             onFriendClick={(id) => {
               console.log("Friend clicked:", id);
             }}
+            isSpotifyConnected={isAuthenticated}
+            isAppleConnected={false}
           />
         )}
       </div>
