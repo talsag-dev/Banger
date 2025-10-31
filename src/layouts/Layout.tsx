@@ -5,6 +5,7 @@ import { SearchDialog } from "../components/SearchDialog";
 import { NewPostModal } from "../components/NewPostModal";
 import { SettingsModal } from "../components/SettingsModal";
 import { Sidebar } from "../components/Sidebar";
+import { useAuth } from "../hooks/useAuth";
 import { useSearchData } from "../hooks/useSearchData";
 import type { ReactNode } from "react";
 import styles from "./Layout.module.css";
@@ -71,6 +72,7 @@ export const Layout: React.FC<LayoutProps> = ({
   showSidebar = true,
 }) => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [
     { isNewPostOpen, isSearchOpen, isSettingsOpen, searchQuery },
     dispatch,
@@ -78,7 +80,6 @@ export const Layout: React.FC<LayoutProps> = ({
 
   // Search data and logic
   const {
-    isAuthenticated,
     isCheckingAuth,
     authError,
     searchResults,
@@ -121,8 +122,6 @@ export const Layout: React.FC<LayoutProps> = ({
             onFriendClick={(id) => {
               console.log("Friend clicked:", id);
             }}
-            isSpotifyConnected={isAuthenticated}
-            isAppleConnected={false}
           />
         )}
       </div>

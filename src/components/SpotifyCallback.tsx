@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import { useInvalidateSpotifyQueries } from "../hooks/useSpotify";
 
 export const SpotifyCallback = () => {
@@ -7,14 +8,20 @@ export const SpotifyCallback = () => {
     "loading"
   );
   const [message, setMessage] = useState("");
-  const invalidateSpotifyQueries = useInvalidateSpotifyQueries();
+  const { refreshProfile } = useAuth();
   const location = useLocation();
+  const invalidateSpotify = useInvalidateSpotifyQueries();
 
+  const handledRef = useRef(false);
   useEffect(() => {
+    if (handledRef.current) return;
+    handledRef.current = true;
     const handleCallback = async () => {
       try {
         const urlParams = new URLSearchParams(location.search);
         const error = urlParams.get("error");
+        const code = urlParams.get("code");
+        const state = urlParams.get("state");
 
         // Check if this is an error route or has error parameter
         if (location.pathname === "/auth/error" || error) {
@@ -23,18 +30,61 @@ export const SpotifyCallback = () => {
           return;
         }
 
+        // Handle Spotify callback with authorization code
+        if (location.pathname === "/auth/spotify/callback" && code) {
+          setStatus("loading");
+          setMessage("Connecting to Spotify...");
+
+          try {
+            // Send the authorization code to your backend
+            const response = await fetch(
+              `${
+                import.meta.env.VITE_API_URL
+              }/auth/integrations/spotify/connect`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({ code, state }),
+              }
+            );
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || "Failed to connect Spotify");
+            }
+
+            setStatus("success");
+            setMessage("Successfully connected to Spotify!");
+
+            // Invalidate cached spotify queries, then redirect home
+            invalidateSpotify();
+            // Redirect back to home; main app will refresh profile once on mount
+            window.location.replace("/");
+            return;
+          } catch (error) {
+            console.error("Spotify connection error:", error);
+            setStatus("error");
+            setMessage(
+              error instanceof Error
+                ? error.message
+                : "Failed to connect to Spotify"
+            );
+            return;
+          }
+        }
+
         // This is a success route
         if (location.pathname === "/auth/success") {
           setStatus("success");
           setMessage("Successfully connected to Spotify!");
 
-          // Invalidate all Spotify queries to refetch with new auth
-          invalidateSpotifyQueries();
-
-          // Redirect back to home after a short delay
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 2000);
+          // Invalidate cached spotify queries, then redirect home
+          invalidateSpotify();
+          // Redirect back to home; main app will refresh profile once on mount
+          window.location.replace("/");
           return;
         }
 
@@ -49,7 +99,7 @@ export const SpotifyCallback = () => {
     };
 
     handleCallback();
-  }, [invalidateSpotifyQueries, location]);
+  }, [refreshProfile, location]);
 
   const getErrorMessage = (error: string | null): string => {
     switch (error) {
@@ -67,6 +117,10 @@ export const SpotifyCallback = () => {
         return "Security validation failed. Please try again.";
       case "auth_failed":
         return "Authentication process failed. Please try again.";
+      case "user_not_found":
+        return "User authentication failed. Please log in again and try connecting to Spotify.";
+      case "auth_required":
+        return "You need to be logged in to connect Spotify. Please log in first.";
       default:
         return error
           ? `Authentication failed: ${error}`

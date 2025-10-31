@@ -24,4 +24,6 @@ export interface Friend {
 export type QuickActionType =
   | "connect-spotify"
   | "connect-apple"
+  | "connect-youtube"
+  | "connect-soundcloud"
   | "share-music";

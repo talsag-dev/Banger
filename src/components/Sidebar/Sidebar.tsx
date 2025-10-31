@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "../Button";
 import { Text } from "../Text";
+import { useAuth } from "../../hooks/useAuth";
 import type { SidebarProps, QuickActionType } from "./types";
 import {
   getTrendingData,
@@ -10,32 +11,62 @@ import {
 } from "./utils";
 import styles from "./Sidebar.module.css";
 
-export const Sidebar: React.FC<SidebarProps> = ({
-  onQuickAction,
-  onTrendingClick,
-  onFriendClick,
-  isSpotifyConnected = false,
-  isAppleConnected = false,
-}) => {
+export const Sidebar: React.FC<
+  Omit<SidebarProps, "isSpotifyConnected" | "isAppleConnected"> & {
+    onQuickAction?: (action: QuickActionType) => void;
+  }
+> = ({ onQuickAction, onTrendingClick, onFriendClick }) => {
+  const {
+    isAuthenticated,
+    isLoading,
+    musicIntegrations,
+    connectSpotify,
+    connectAppleMusic,
+    connectYouTubeMusic,
+    connectSoundCloud,
+  } = useAuth();
   const trendingData = getTrendingData();
   const activeFriends = getActiveFriends();
-  
-  // Filter out connected services from quick actions
-  const allQuickActions: QuickActionType[] = [
-    "connect-spotify",
-    "connect-apple", 
-    "share-music",
-  ];
-  
-  const quickActions = allQuickActions.filter(action => {
-    if (action === "connect-spotify" && isSpotifyConnected) return false;
-    if (action === "connect-apple" && isAppleConnected) return false;
-    return true;
-  });
+
+  // Show different quick actions based on authentication status
+  const getQuickActions = (): QuickActionType[] => {
+    if (!isAuthenticated) {
+      return ["share-music"];
+    }
+
+    // For authenticated users, show music service connections that aren't connected yet
+    const actions: QuickActionType[] = [];
+
+    if (!musicIntegrations?.spotify?.isConnected) {
+      actions.push("connect-spotify");
+    }
+    if (!musicIntegrations?.["apple-music"]?.isConnected) {
+      actions.push("connect-apple");
+    }
+    if (!musicIntegrations?.["youtube-music"]?.isConnected) {
+      actions.push("connect-youtube");
+    }
+    if (!musicIntegrations?.soundcloud?.isConnected) {
+      actions.push("connect-soundcloud");
+    }
+
+    // Always show share music option
+    actions.push("share-music");
+
+    return actions;
+  };
+
+  const quickActions = getQuickActions();
 
   const handleQuickActionClick = async (action: QuickActionType) => {
     try {
-      await handleQuickAction(action);
+      await handleQuickAction(
+        action,
+        connectSpotify,
+        connectAppleMusic,
+        connectYouTubeMusic,
+        connectSoundCloud
+      );
       onQuickAction?.(action);
     } catch {
       // Handle error state - could show toast notification
@@ -64,22 +95,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       <div className={styles.sidebarSection}>
         <Text variant="subtitle" as="h3">
-          Quick Actions
+          {isAuthenticated ? "Connect Music Services" : "Quick Actions"}
         </Text>
+        {isAuthenticated && quickActions.length > 1 && (
+          <Text
+            variant="caption"
+            color="secondary"
+            className={styles.sectionDescription}
+          >
+            Connect your music platforms to sync playlists and discover new
+            music
+          </Text>
+        )}
         <div className={styles.quickActions}>
-          {quickActions.map((action) => {
-            const config = getQuickActionConfig(action);
-            return (
-              <Button
-                key={action}
-                size="sm"
-                fullWidth
-                onClick={() => handleQuickActionClick(action)}
-              >
-                {config.text}
-              </Button>
-            );
-          })}
+          {isLoading ? (
+            <Text variant="caption" color="secondary">
+              Loading...
+            </Text>
+          ) : quickActions.length === 1 && quickActions[0] === "share-music" ? (
+            <Text variant="caption" color="secondary">
+              🎉 All music services connected!
+            </Text>
+          ) : (
+            quickActions.map((action) => {
+              const config = getQuickActionConfig(action);
+              return (
+                <Button
+                  key={action}
+                  size="sm"
+                  fullWidth
+                  onClick={() => handleQuickActionClick(action)}
+                >
+                  {config.text}
+                </Button>
+              );
+            })
+          )}
         </div>
       </div>
 

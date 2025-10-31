@@ -64,10 +64,8 @@ export interface SpotifyUser {
 }
 
 export interface SpotifyCurrentlyPlaying {
-  is_playing: boolean;
-  item: SpotifyTrack | null;
-  progress_ms: number;
-  timestamp: number;
+  track: SpotifyTrack | null;
+  isPlaying: boolean;
 }
 
 export interface SpotifyTopTracksResponse {
@@ -77,7 +75,7 @@ export interface SpotifyTopTracksResponse {
   offset: number;
 }
 
-const BASE_URL = import.meta.env.VITE_SPOTIFY_API_URL;
+const BASE_URL = import.meta.env.VITE_SPOTIFY_API_URL || import.meta.env.VITE_API_URL || "https://localhost:3001/api";
 
 class SpotifyApiService {
   private async makeRequest<T>(
@@ -115,7 +113,11 @@ class SpotifyApiService {
       );
     }
 
-    return response.json();
+    const body = await response.json().catch(() => ({}));
+    if (body && typeof body === "object" && "success" in body) {
+      return (body.data as T) ?? (body as T);
+    }
+    return body as T;
   }
 
   async search(
@@ -137,13 +139,12 @@ class SpotifyApiService {
   }
 
   async getProfile(): Promise<SpotifyUser> {
-    return this.makeRequest<SpotifyUser>("/spotify/profile");
+    const data = await this.makeRequest<{ profile: SpotifyUser }>("/spotify/profile");
+    return data.profile;
   }
 
   async getCurrentlyPlaying(): Promise<SpotifyCurrentlyPlaying> {
-    return this.makeRequest<SpotifyCurrentlyPlaying>(
-      "/spotify/currently-playing"
-    );
+    return this.makeRequest<SpotifyCurrentlyPlaying>("/spotify/currently-playing");
   }
 
   async getTopTracks(

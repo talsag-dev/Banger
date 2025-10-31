@@ -33,6 +33,9 @@
 
   /* Neutral Colors - Professional Grays */
   --color-white: #ffffff;
+  --color-black: #000000;
+  --color-black-light: #1a1a1a;
+  --color-black-dark: #000000;
   --color-gray-50: #f8fafc;
   --color-gray-100: #f1f5f9;
   --color-gray-200: #e2e8f0;

@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { FeedContainer } from "../components/FeedContainer";
-import type { Feed } from "../types/music";
+import type { Feed, MusicPost } from "../types/music";
+import { http } from "../services/http";
 
 const fetchFeed = async (): Promise<Feed> => {
-  const response = await fetch("/api/feed");
-  if (!response.ok) {
-    throw new Error("Failed to fetch feed");
-  }
-  return response.json();
+  const data = await http<{ posts: MusicPost[] }>(`/posts`);
+  return {
+    posts: data.posts || [],
+    hasMore: false,
+  };
 };
 
 export const Home: React.FC = () => {

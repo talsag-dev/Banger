@@ -134,13 +134,13 @@
 }
 
 .variantApple {
-  background: var(--color-apple-music);
+  background: var(--color-black);
   color: var(--color-text-inverse);
-  border: 1px solid var(--color-apple-music);
+  border: 1px solid var(--color-black);
 
   &:hover:not(:disabled) {
-    background: var(--color-apple-music-light);
-    border-color: var(--color-apple-music-light);
+    background: var(--color-black-light);
+    border-color: var(--color-black-light);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
   }

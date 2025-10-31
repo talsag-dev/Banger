@@ -20,6 +20,11 @@
   }
 }
 
+.sectionDescription {
+  margin-bottom: var(--space-3);
+  display: block;
+}
+
 /* Trending Styles */
 .trendingList {
   display: flex;

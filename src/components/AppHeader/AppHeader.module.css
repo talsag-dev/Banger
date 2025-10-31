@@ -103,6 +103,13 @@
   position: relative;
 }
 
+.userAvatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .userMenuPanel {
   background: var(--color-bg-primary);
   border: 1px solid var(--color-border-light);
@@ -121,6 +128,12 @@
   & .menuButton {
     justify-content: flex-start;
   }
+}
+
+.userInfo {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border-light);
+  margin-bottom: var(--space-1);
 }
 
 .userMenuSeparator {

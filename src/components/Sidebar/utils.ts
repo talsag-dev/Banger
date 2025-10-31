@@ -41,15 +41,23 @@ export const getActiveFriends = (): Friend[] => [
 export const getQuickActionConfig = (action: QuickActionType) => {
   const configs = {
     "connect-spotify": {
-      text: "Connect Spotify",
+      text: "🎵 Connect Spotify",
       className: "spotify",
     },
     "connect-apple": {
-      text: "Connect Apple Music",
+      text: "🍎 Connect Apple Music",
       className: "apple",
     },
+    "connect-youtube": {
+      text: "📺 Connect YouTube Music",
+      className: "youtube",
+    },
+    "connect-soundcloud": {
+      text: "☁️ Connect SoundCloud",
+      className: "soundcloud",
+    },
     "share-music": {
-      text: "Share What You're Listening To",
+      text: "🎶 Share What You're Listening To",
       className: "share",
     },
   };
@@ -58,13 +66,61 @@ export const getQuickActionConfig = (action: QuickActionType) => {
 };
 
 export const handleQuickAction = async (
-  action: QuickActionType
+  action: QuickActionType,
+  connectSpotify?: () => Promise<void>,
+  connectAppleMusic?: () => Promise<void>,
+  connectYouTubeMusic?: () => Promise<void>,
+  connectSoundCloud?: () => Promise<void>
 ): Promise<void> => {
   try {
     console.log(`Executing quick action: ${action}`);
 
-    // Simulate API call or action
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    switch (action) {
+      case "connect-spotify": {
+        if (connectSpotify) {
+          await connectSpotify();
+        } else {
+          console.warn("Spotify connection function not provided");
+        }
+        break;
+      }
+
+      case "connect-apple": {
+        if (connectAppleMusic) {
+          await connectAppleMusic();
+        } else {
+          console.warn("Apple Music connection function not provided");
+        }
+        break;
+      }
+
+      case "connect-youtube": {
+        if (connectYouTubeMusic) {
+          await connectYouTubeMusic();
+        } else {
+          console.warn("YouTube Music connection function not provided");
+        }
+        break;
+      }
+
+      case "connect-soundcloud": {
+        if (connectSoundCloud) {
+          await connectSoundCloud();
+        } else {
+          console.warn("SoundCloud connection function not provided");
+        }
+        break;
+      }
+
+      case "share-music": {
+        // TODO: Implement music sharing functionality
+        console.log("Music sharing not yet implemented");
+        break;
+      }
+
+      default:
+        console.warn(`Unknown quick action: ${action}`);
+    }
 
     console.log(`Quick action completed: ${action}`);
   } catch (error) {

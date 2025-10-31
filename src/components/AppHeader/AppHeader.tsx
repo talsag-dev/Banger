@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Search, Plus, User, Bell } from "lucide-react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { Button } from "../Button";
 import { Text } from "../Text";
+import { useAuth } from "../../hooks/useAuth";
+import { LoginModal } from "../Auth/LoginModal";
 import type { AppHeaderProps } from "./types";
 import styles from "./AppHeader.module.css";
 
@@ -13,6 +15,28 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onProfileClick,
   onHomeClick,
 }) => {
+  const { logout, isAuthenticated, user } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      // Optionally redirect to home or login page
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Sign out failed:", error);
+      // Could show toast notification here
+    }
+  };
+
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
   return (
     <header className={styles.appHeader}>
       <div className={styles.headerContent}>
@@ -53,7 +77,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <Button variant="icon" size="sm" leftIcon={<Bell size={20} />} />
           <Popover className={styles.userMenuPopover}>
             <PopoverButton as={Button} variant="icon" size="sm">
-              <User size={20} />
+              {isAuthenticated && user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.displayName || "User"}
+                  className={styles.userAvatar}
+                />
+              ) : (
+                <User size={20} />
+              )}
             </PopoverButton>
             <PopoverPanel
               anchor={{
@@ -64,54 +96,109 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             >
               {({ close }) => (
                 <div className={styles.userMenuItems}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    fullWidth
-                    onClick={() => {
-                      close();
-                      onProfileClick();
-                    }}
-                    className={styles.menuButton}
-                  >
-                    Profile
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    fullWidth
-                    onClick={() => {
-                      close();
-                      onSettingsClick();
-                    }}
-                    className={styles.menuButton}
-                  >
-                    Settings
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    fullWidth
-                    onClick={() => close}
-                    className={styles.menuButton}
-                  >
-                    Help
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    fullWidth
-                    onClick={() => close}
-                    className={styles.menuButton}
-                  >
-                    Sign Out
-                  </Button>
+                  {isAuthenticated && user ? (
+                    <>
+                      <div className={styles.userInfo}>
+                        <Text variant="body" weight="medium">
+                          {user.displayName || "User"}
+                        </Text>
+                        {user.email && (
+                          <Text variant="caption" color="muted">
+                            {user.email}
+                          </Text>
+                        )}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        fullWidth
+                        onClick={() => {
+                          close();
+                          onProfileClick();
+                        }}
+                        className={styles.menuButton}
+                      >
+                        Profile
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        fullWidth
+                        onClick={() => {
+                          close();
+                          onSettingsClick();
+                        }}
+                        className={styles.menuButton}
+                      >
+                        Settings
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        fullWidth
+                        onClick={() => close}
+                        className={styles.menuButton}
+                      >
+                        Help
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        fullWidth
+                        onClick={() => {
+                          close();
+                          handleSignOut();
+                        }}
+                        className={styles.menuButton}
+                      >
+                        Sign Out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <div className={styles.userInfo}>
+                        <Text variant="body" weight="medium">
+                          Welcome to Banger
+                        </Text>
+                        <Text variant="caption" color="muted">
+                          Sign in to share your music
+                        </Text>
+                      </div>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        fullWidth
+                        onClick={() => {
+                          close();
+                          handleLoginClick();
+                        }}
+                        className={styles.menuButton}
+                      >
+                        Sign In
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        fullWidth
+                        onClick={() => {
+                          close();
+                          handleLoginClick();
+                        }}
+                        className={styles.menuButton}
+                      >
+                        Create Account
+                      </Button>
+                    </>
+                  )}
                 </div>
               )}
             </PopoverPanel>
           </Popover>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
     </header>
   );
 };
