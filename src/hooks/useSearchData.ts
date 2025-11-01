@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
-import { useSpotifySearch, useAuthStatus } from "./useSpotify";
+import { useSpotifySearch } from "./useSpotify";
 import { convertSpotifyTracksToSearchResults } from "../utils/spotifyUtils";
-import { spotifyApi } from "../services/spotifyApi";
+import { http } from "@utils/http";
+import type { SpotifyAuthResponse } from "../types/spotify";
 import type { SearchResult } from "../components/SearchDialog/types";
+import { useAuth } from "./useAuth";
 
 // Debounce hook
 const useDebounce = (value: string, delay: number) => {
@@ -27,10 +29,10 @@ export const useSearchData = (searchQuery: string) => {
 
   // Check if user is authenticated
   const {
-    data: isAuthenticated,
+    isAuthenticated,
     isLoading: isCheckingAuth,
     error: authError,
-  } = useAuthStatus();
+  } = useAuth();
 
   // Search for tracks when query is provided
   const {
@@ -50,7 +52,7 @@ export const useSearchData = (searchQuery: string) => {
   // Handle authentication redirect
   const handleAuthRedirect = async () => {
     try {
-      const authResponse = await spotifyApi.getAuthUrl();
+      const authResponse = await http<SpotifyAuthResponse>(`/spotify/auth`);
       window.location.href = authResponse.authUrl;
     } catch (error) {
       console.error("Failed to get Spotify auth URL:", error);

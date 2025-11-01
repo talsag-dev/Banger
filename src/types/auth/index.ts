@@ -1,7 +1,5 @@
-// Primary authentication providers (for creating Banger account)
 export type AuthProvider = "google" | "apple" | "email";
 
-// Music service integration providers (for music features)
 export type MusicProvider =
   | "spotify"
   | "apple-music"
@@ -23,19 +21,44 @@ export interface AuthUser {
 export interface MusicIntegration {
   provider: MusicProvider;
   isConnected: boolean;
-  userId?: string; // Provider-specific user ID
-  displayName?: string; // Provider-specific display name
-  avatar?: string; // Provider-specific avatar
+  userId?: string;
+  displayName?: string;
+  avatar?: string;
   connectedAt?: string;
   lastSyncAt?: string;
   hasValidToken: boolean;
-  permissions: string[]; // What permissions we have
+  permissions: string[];
+}
+
+export interface UserSettings {
+  showCurrentlyListening: boolean;
+  allowReactions: boolean;
+  allowComments: boolean;
+  profileVisibility: "public" | "friends" | "private";
 }
 
 // Complete user profile with integrations
 export interface UserProfile {
   user: AuthUser;
-  musicIntegrations: Record<MusicProvider, MusicIntegration>;
+  settings: UserSettings;
+  bio?: string;
+  displayName: string;
+  username: string;
+  avatar?: string;
+  id: string;
+  followersCount: number;
+  followingCount: number;
+  postsCount: number;
+  isFollowing?: boolean;
+  spotifyConnected: boolean;
+  appleConnected: boolean;
+  joinedDate: string;
+  connectedPlatforms: Array<{
+    type: MusicProvider;
+    isConnected: boolean;
+    showCurrentlyListening: boolean;
+    username?: string;
+  }>;
 }
 
 // Authentication state

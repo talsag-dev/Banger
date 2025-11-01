@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { FeedContainer } from "../components/FeedContainer";
-import type { Feed, MusicPost } from "../types/music";
-import { http } from "../services/http";
+import { FeedContainer } from "@components/FeedContainer";
+import type { Feed, MusicPost } from "@types";
+import { http } from "@utils/http";
 
 const fetchFeed = async (): Promise<Feed> => {
   const data = await http<{ posts: MusicPost[] }>(`/posts`);

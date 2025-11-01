@@ -1,3 +1,4 @@
+import { http } from "@utils/http";
 import type { UserSettings, SettingItem } from "./types";
 
 export const getDefaultSettings = (): UserSettings => ({
@@ -36,9 +37,9 @@ export const updateSetting = (
 export const saveSettings = async (settings: UserSettings): Promise<void> => {
   try {
     // In a real app, this would save to backend
-    await fetch("/api/user/settings", {
+    // Using central HTTP client for consistency
+    await http(`/user/settings`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settings),
     });
 

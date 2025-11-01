@@ -1,4 +1,4 @@
-import type { SpotifyTrack } from "../services/spotifyApi";
+import type { SpotifyTrack } from "../types/spotify";
 import type { SearchResult } from "../components/SearchDialog/types";
 
 export const convertSpotifyTrackToSearchResult = (

@@ -1,12 +1,13 @@
 import { useReducer, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { User, Music, Heart } from "lucide-react";
-import { Button } from "../components/Button";
-import { Text } from "../components/Text";
-import { MusicPostCard } from "../components/MusicPostCard";
-import type { MusicPost, UserProfile } from "../types/music";
-import { mockPosts } from "../data/mockData";
+import { Button } from "@components/Button";
+import { Text } from "@components/Text";
+import { MusicPostCard } from "@components/MusicPostCard";
+import type { MusicPost } from "@types";
+import { http } from "@utils/http";
 import styles from "./Profile.module.css";
+import type { UserProfile } from "@types";
 
 // State type for our profile reducer
 interface ProfileState {
@@ -69,49 +70,22 @@ export const Profile: React.FC = () => {
   const isOwnProfile = !userId;
 
   useEffect(() => {
-    // Simulate loading user profile and posts
     const loadProfile = async () => {
       dispatch({ type: "SET_LOADING", payload: true });
-
-      // Mock delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Mock user profile data
-      const profile: UserProfile = {
-        id: userId || "current-user",
-        username: userId ? "john_doe" : "you",
-        displayName: userId ? "John Doe" : "Your Name",
-        bio: userId
-          ? "Music lover 🎵 | Discovering new sounds daily"
-          : "Share your musical journey",
-        avatar:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-        followersCount: 1250,
-        followingCount: 380,
-        postsCount: 42,
-        isFollowing: userId ? false : undefined, // undefined for own profile
-        spotifyConnected: true,
-        appleConnected: false,
-        joinedDate: "2024-01-15",
-        connectedPlatforms: [
-          { type: "spotify", isConnected: true, showCurrentlyListening: true },
-        ],
-        settings: {
-          showCurrentlyListening: true,
-          allowReactions: true,
-          allowComments: true,
-          profileVisibility: "public",
-        },
-      };
-
-      // Mock user posts - filter by userId in real implementation
-      const posts = mockPosts.filter(
-        (_: MusicPost, index: number) => index < 5
-      ); // Show first 5 posts
-
-      dispatch({ type: "SET_PROFILE", payload: profile });
-      dispatch({ type: "SET_POSTS", payload: posts });
-      dispatch({ type: "SET_LOADING", payload: false });
+      try {
+        const profile = await http<UserProfile>(
+          `/users/${userId || "current-user"}/profile`
+        );
+        const postsData = await http<{ posts: MusicPost[] }>(
+          `/posts/user/${userId || "current-user"}`
+        );
+        dispatch({ type: "SET_PROFILE", payload: profile });
+        dispatch({ type: "SET_POSTS", payload: postsData.posts || [] });
+      } catch {
+        dispatch({ type: "SET_POSTS", payload: [] });
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
+      }
     };
 
     loadProfile();

@@ -11,6 +11,7 @@ import { Button } from "../Button";
 import type { Comment } from "../../types/music";
 import type { CommentsDialogProps } from "./types";
 import styles from "./CommentsDialog.module.css";
+import { http } from "@utils/http";
 
 export const CommentsDialog: React.FC<CommentsDialogProps> = ({
   isOpen,
@@ -38,9 +39,10 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
   const { data: comments = [], isLoading: commentsLoading } = useQuery({
     queryKey: ["comments", postId],
     queryFn: async (): Promise<Comment[]> => {
-      const response = await fetch(`/api/posts/${postId}/comments`);
-      if (!response.ok) throw new Error("Failed to fetch comments");
-      return response.json();
+      const data = await http<{ comments: Comment[] }>(
+        `/posts/${postId}/comments`
+      );
+      return data.comments || [];
     },
     enabled: isOpen,
     staleTime: 30000,
@@ -48,13 +50,10 @@ export const CommentsDialog: React.FC<CommentsDialogProps> = ({
 
   const postCommentMutation = useMutation({
     mutationFn: async (content: string) => {
-      const response = await fetch(`/api/posts/${postId}/comments`, {
+      return http(`/posts/${postId}/comments`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
       });
-      if (!response.ok) throw new Error("Failed to post comment");
-      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });

@@ -30,28 +30,28 @@ export const Sidebar: React.FC<
 
   // Show different quick actions based on authentication status
   const getQuickActions = (): QuickActionType[] => {
-    if (!isAuthenticated) {
-      return ["share-music"];
-    }
-
-    // For authenticated users, show music service connections that aren't connected yet
     const actions: QuickActionType[] = [];
 
-    if (!musicIntegrations?.spotify?.isConnected) {
+    // Check both isConnected AND hasValidToken (token might have expired)
+    const spotify = musicIntegrations?.spotify;
+    if (!spotify?.isConnected || !spotify?.hasValidToken) {
       actions.push("connect-spotify");
     }
-    if (!musicIntegrations?.["apple-music"]?.isConnected) {
+
+    const appleMusic = musicIntegrations?.["apple-music"];
+    if (!appleMusic?.isConnected || !appleMusic?.hasValidToken) {
       actions.push("connect-apple");
     }
-    if (!musicIntegrations?.["youtube-music"]?.isConnected) {
+
+    const youtubeMusic = musicIntegrations?.["youtube-music"];
+    if (!youtubeMusic?.isConnected || !youtubeMusic?.hasValidToken) {
       actions.push("connect-youtube");
     }
-    if (!musicIntegrations?.soundcloud?.isConnected) {
+
+    const soundcloud = musicIntegrations?.soundcloud;
+    if (!soundcloud?.isConnected || !soundcloud?.hasValidToken) {
       actions.push("connect-soundcloud");
     }
-
-    // Always show share music option
-    actions.push("share-music");
 
     return actions;
   };
@@ -111,10 +111,6 @@ export const Sidebar: React.FC<
           {isLoading ? (
             <Text variant="caption" color="secondary">
               Loading...
-            </Text>
-          ) : quickActions.length === 1 && quickActions[0] === "share-music" ? (
-            <Text variant="caption" color="secondary">
-              🎉 All music services connected!
             </Text>
           ) : (
             quickActions.map((action) => {

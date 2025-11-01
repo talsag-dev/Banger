@@ -56,10 +56,6 @@ export const getQuickActionConfig = (action: QuickActionType) => {
       text: "☁️ Connect SoundCloud",
       className: "soundcloud",
     },
-    "share-music": {
-      text: "🎶 Share What You're Listening To",
-      className: "share",
-    },
   };
 
   return configs[action];
@@ -109,12 +105,6 @@ export const handleQuickAction = async (
         } else {
           console.warn("SoundCloud connection function not provided");
         }
-        break;
-      }
-
-      case "share-music": {
-        // TODO: Implement music sharing functionality
-        console.log("Music sharing not yet implemented");
         break;
       }
 

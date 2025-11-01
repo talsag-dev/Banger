@@ -7,7 +7,10 @@ export type HttpError = {
 
 const BASE_URL = import.meta.env.VITE_API_URL || "https://localhost:3001/api";
 
-export async function http<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+export async function http<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
   const url = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;
   const res = await fetch(url, {
     credentials: "include",
@@ -37,5 +40,3 @@ export async function http<T>(endpoint: string, options: RequestInit = {}): Prom
   }
   return (body as T) ?? (undefined as unknown as T);
 }
-
-

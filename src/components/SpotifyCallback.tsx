@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useInvalidateSpotifyQueries } from "../hooks/useSpotify";
+import { useInvalidateSpotifyQueries } from "@hooks/useSpotify";
+import { Text } from "@components/Text";
+import { Button } from "@components/Button";
+import styles from "./SpotifyCallback.module.css";
+import { http } from "@utils/http";
 
 export const SpotifyCallback = () => {
   const [status, setStatus] = useState<"loading" | "success" | "error">(
@@ -23,38 +27,22 @@ export const SpotifyCallback = () => {
         const code = urlParams.get("code");
         const state = urlParams.get("state");
 
-        // Check if this is an error route or has error parameter
         if (location.pathname === "/auth/error" || error) {
           setStatus("error");
           setMessage(getErrorMessage(error));
           return;
         }
 
-        // Handle Spotify callback with authorization code
         if (location.pathname === "/auth/spotify/callback" && code) {
           setStatus("loading");
           setMessage("Connecting to Spotify...");
 
           try {
             // Send the authorization code to your backend
-            const response = await fetch(
-              `${
-                import.meta.env.VITE_API_URL
-              }/auth/integrations/spotify/connect`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({ code, state }),
-              }
-            );
-
-            if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.error || "Failed to connect Spotify");
-            }
+            await http(`/auth/integrations/spotify/connect`, {
+              method: "POST",
+              body: JSON.stringify({ code, state }),
+            });
 
             setStatus("success");
             setMessage("Successfully connected to Spotify!");
@@ -129,74 +117,55 @@ export const SpotifyCallback = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8 text-center">
+    <div className={styles.container}>
+      <div className={styles.card}>
         {status === "loading" && (
           <div>
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <div className={styles.spinner} />
+            <Text variant="subtitle" className={styles.subtitle}>
               Connecting to Spotify...
-            </h2>
-            <p className="text-gray-600">
+            </Text>
+            <Text variant="body" color="secondary" className={styles.bodyText}>
               Please wait while we complete your authentication.
-            </p>
+            </Text>
           </div>
         )}
 
         {status === "success" && (
           <div>
-            <div className="rounded-full h-12 w-12 bg-green-100 mx-auto mb-4 flex items-center justify-center">
-              <svg
-                className="h-6 w-6 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+            <div className={`${styles.iconCircle} ${styles.iconSuccess}`}>
+              ✓
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <Text variant="subtitle" className={styles.subtitle}>
               Success!
-            </h2>
-            <p className="text-gray-600 mb-4">{message}</p>
-            <p className="text-sm text-gray-500">
+            </Text>
+            <Text variant="body" color="secondary" className={styles.bodyText}>
+              {message}
+            </Text>
+            <Text
+              variant="caption"
+              color="secondary"
+              className={styles.bodyText}
+            >
               Redirecting you back to the app...
-            </p>
+            </Text>
           </div>
         )}
 
         {status === "error" && (
           <div>
-            <div className="rounded-full h-12 w-12 bg-red-100 mx-auto mb-4 flex items-center justify-center">
-              <svg
-                className="h-6 w-6 text-red-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <div className={`${styles.iconCircle} ${styles.iconError}`}>✕</div>
+            <Text variant="subtitle" className={styles.subtitle}>
               Authentication Failed
-            </h2>
-            <p className="text-gray-600 mb-4">{message}</p>
-            <button
-              onClick={() => (window.location.href = "/")}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
-            >
-              Return to App
-            </button>
+            </Text>
+            <Text variant="body" color="secondary" className={styles.bodyText}>
+              {message}
+            </Text>
+            <div className={styles.returnButton}>
+              <Button onClick={() => (window.location.href = "/")} size="md">
+                Return to App
+              </Button>
+            </div>
           </div>
         )}
       </div>

@@ -88,7 +88,6 @@ export const FeedContainer: React.FC<FeedContainerProps> = ({
   onComment,
   onDiscoverPeople,
 }) => {
-  console.log("FeedContainer", { feed, isLoading, error });
   if (isLoading) {
     return (
       <div className={styles.feedContainer}>

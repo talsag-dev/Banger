@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import type { Feed, MusicPost } from "../types/music";
+import type { MusicPost, UserProfile } from "@types";
 import { ReactionType } from "../types/music";
 
 // Mock data
@@ -119,13 +119,12 @@ const mockPosts: MusicPost[] = [
 ];
 
 export const handlers = [
-  // Get feed
-  http.get("/api/feed", () => {
-    const feed: Feed = {
-      posts: mockPosts,
-      hasMore: false,
-    };
-    return HttpResponse.json(feed);
+  // Get posts (Home feed) - wildcard for cross-origin requests
+  http.get("*/api/posts", () => {
+    return HttpResponse.json({
+      success: true,
+      data: { posts: mockPosts },
+    });
   }),
 
   // Get currently listening
@@ -135,6 +134,47 @@ export const handlers = [
     )?.track;
 
     return HttpResponse.json(currentTrack || null);
+  }),
+
+  http.get("/api/users/:userId/profile", ({ params }) => {
+    const { userId } = params as { userId: string };
+    const profile: UserProfile = {
+      user: {
+        id: userId || "current-user",
+        email: userId ? "john@example.com" : "you@example.com",
+        displayName: userId ? "John Doe" : "Your Name",
+        avatar:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        authProvider: "email",
+        createdAt: "2024-01-15",
+        updatedAt: "2024-01-15",
+      },
+      id: userId || "current-user",
+      username: userId ? "john_doe" : "you",
+      displayName: userId ? "John Doe" : "Your Name",
+      bio: userId
+        ? "Music lover 🎵 | Discovering new sounds daily"
+        : "Share your musical journey",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      followersCount: 1250,
+      followingCount: 380,
+      postsCount: 42,
+      isFollowing: !!userId && userId !== "current-user",
+      spotifyConnected: true,
+      appleConnected: false,
+      joinedDate: "2024-01-15",
+      connectedPlatforms: [
+        { type: "spotify", isConnected: true, showCurrentlyListening: true },
+      ],
+      settings: {
+        showCurrentlyListening: true,
+        allowReactions: true,
+        allowComments: true,
+        profileVisibility: "public",
+      },
+    };
+    return HttpResponse.json(profile);
   }),
 
   // Get comments for a post

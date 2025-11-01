@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { Switch } from "@headlessui/react";
-import { Button } from "../Button";
-import { Modal } from "../Modal";
+import { Button } from "@components/Button";
+import { Modal } from "@components/Modal";
 import type { SettingsModalProps, UserSettings } from "./types";
 import {
   getDefaultSettings,

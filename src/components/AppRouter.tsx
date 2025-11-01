@@ -1,5 +1,4 @@
 import React from "react";
-import SetCookie from "../pages/SetCookie";
 import { Routes, Route } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Loading } from "./Loading";
@@ -20,7 +19,6 @@ export const AppRouter: React.FC = () => {
       <Route path="/auth/success" element={<SpotifyCallback />} />
       <Route path="/auth/error" element={<SpotifyCallback />} />
       <Route path="/auth/spotify/callback" element={<SpotifyCallback />} />
-      <Route path="/auth/set-cookie" element={<SetCookie />} />
 
       {/* Conditional routes based on authentication */}
       {isAuthenticated ? (

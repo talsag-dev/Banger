@@ -1,0 +1,67 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-muted, #f9fafb);
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  text-align: center;
+}
+
+.iconCircle {
+  height: 48px;
+  width: 48px;
+  border-radius: 9999px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconSuccess {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.iconError {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.spinner {
+  height: 48px;
+  width: 48px;
+  border-radius: 9999px;
+  border: 3px solid #eee;
+  border-top-color: #16a34a;
+  margin: 0 auto 16px;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.subtitle {
+  margin-bottom: 8px;
+}
+
+.bodyText {
+  color: #6b7280;
+}
+
+.returnButton {
+  margin-top: 16px;
+}
+
+

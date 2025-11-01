@@ -22,38 +22,11 @@ export interface MusicPost {
   comments: Comment[];
 }
 
-export interface User {
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  connectedPlatforms: Platform[];
-  settings: UserSettings;
-}
-
-export interface UserProfile extends User {
-  bio?: string;
-  followersCount: number;
-  followingCount: number;
-  postsCount: number;
-  isFollowing?: boolean; // undefined for own profile
-  spotifyConnected: boolean;
-  appleConnected: boolean;
-  joinedDate: string;
-}
-
 export interface Platform {
   type: "spotify" | "apple-music" | "youtube-music" | "soundcloud";
   isConnected: boolean;
   showCurrentlyListening: boolean;
   username?: string;
-}
-
-export interface UserSettings {
-  showCurrentlyListening: boolean;
-  allowReactions: boolean;
-  allowComments: boolean;
-  profileVisibility: "public" | "friends" | "private";
 }
 
 export const ReactionType = {

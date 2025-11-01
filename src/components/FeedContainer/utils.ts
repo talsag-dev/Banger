@@ -7,15 +7,6 @@ export const getErrorMessage = (error?: Error | null): string => {
   return "Failed to load feed. Please try again.";
 };
 
-export const getFeedStats = (postsCount: number) => ({
-  isEmpty: postsCount === 0,
-  hasContent: postsCount > 0,
-  message:
-    postsCount === 0
-      ? "Your feed is quiet"
-      : `${postsCount} ${postsCount === 1 ? "post" : "posts"} in your feed`,
-});
-
 export const handleDiscoverPeople = async (): Promise<void> => {
   try {
     // In a real app, this would navigate to discover page or open discovery modal
