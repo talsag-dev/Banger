@@ -34,8 +34,10 @@ export const useCreatePost = () => {
       });
     },
     onSuccess: () => {
-      // Invalidate posts queries to refetch the feed
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // Invalidate all relevant queries to refetch the feed and profile data
+      queryClient.invalidateQueries({ queryKey: ["feed"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["likedPosts"] });
     },
   });
 };
