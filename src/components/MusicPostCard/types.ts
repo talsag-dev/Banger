@@ -4,6 +4,8 @@ export interface MusicPostCardProps {
   post: MusicPost;
   onReaction: (postId: string, type: string) => void;
   onComment: (postId: string, content: string) => void;
+  onEdit?: (post: MusicPost) => void;
+  onDelete?: (postId: string) => void;
 }
 
 export interface MusicPostCardState {

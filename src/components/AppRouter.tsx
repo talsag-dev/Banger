@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Loading } from "./Loading";
-import Landing from "../pages/Landing";
+import { Landing } from "../pages/Landing";
 import { SpotifyCallback } from "./SpotifyCallback";
 import { AuthenticatedApp } from "./AuthenticatedApp";
 

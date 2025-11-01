@@ -7,36 +7,50 @@ export type HttpError = {
 
 const BASE_URL = import.meta.env.VITE_API_URL || "https://localhost:3001/api";
 
+export interface HttpOptions extends Omit<RequestInit, "body"> {
+  body?: BodyInit | object | null;
+}
+
 export async function http<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: HttpOptions = {}
 ): Promise<T> {
   const url = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;
+
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {}),
+  };
+
+  const body = options.body ? JSON.stringify(options.body) : null;
+
   const res = await fetch(url, {
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
+    headers,
     ...options,
+    body,
   });
 
   const isJson = res.headers.get("content-type")?.includes("application/json");
-  const body = isJson ? await res.json().catch(() => ({})) : undefined;
+  const responseBody = isJson ? await res.json().catch(() => ({})) : undefined;
 
   if (!res.ok) {
     const err: HttpError = {
       status: res.status,
-      error: body?.error || res.statusText || "Request failed",
-      message: body?.message,
-      code: body?.code,
+      error: responseBody?.error || res.statusText || "Request failed",
+      message: responseBody?.message,
+      code: responseBody?.code,
     };
     throw Object.assign(new Error(err.message || err.error), err);
   }
 
   // Support both {success,data} and plain JSON
-  if (body && typeof body === "object" && "success" in body) {
-    return (body.data as T) ?? (body as T);
+  if (
+    responseBody &&
+    typeof responseBody === "object" &&
+    "success" in responseBody
+  ) {
+    return (responseBody.data as T) ?? (responseBody as T);
   }
-  return (body as T) ?? (undefined as unknown as T);
+  return (responseBody as T) ?? (undefined as unknown as T);
 }

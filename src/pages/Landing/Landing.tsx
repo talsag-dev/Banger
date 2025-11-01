@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Field, Input } from "@headlessui/react";
-import { useAuth } from "../hooks/useAuth";
-import { EmailSignupModal } from "../components/Auth/EmailSignupModal";
-import { Button } from "../components/Button";
-import { Text } from "../components/Text";
+import { EmailSignupModal } from "@components/Auth/EmailSignupModal";
+import { Button } from "@components/Button";
+import { Text } from "@components/Text";
 import styles from "./Landing.module.css";
+import { useAuth } from "@hooks/useAuth";
 
 const Landing = () => {
   const { loginWithGoogle, loginWithApple, loginWithEmail, isLoading, error } =
@@ -202,4 +202,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export { Landing };

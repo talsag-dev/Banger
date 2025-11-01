@@ -1,8 +1,9 @@
+import type { MusicPost } from "../../types/music";
+
 export interface NewPostModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConnectSpotify?: () => void;
-  onConnectAppleMusic?: () => void;
+  onPostCreated?: () => void;
+  onPostUpdated?: () => void;
+  post?: MusicPost | null; // If provided, modal will be in edit mode
 }
-
-export type PlatformType = "spotify" | "apple-music";

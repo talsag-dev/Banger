@@ -10,6 +10,12 @@
   margin-bottom: var(--space-4);
 }
 
+.postHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 .userInfo {
   display: flex;
   align-items: center;
@@ -52,6 +58,31 @@
 
 .pulseIcon {
   animation: pulse 2s infinite;
+}
+
+.editPostButton {
+  color: var(--color-text-secondary);
+  padding: var(--space-2);
+
+  &:hover {
+    background: var(--color-bg-muted);
+    color: var(--color-text-primary);
+  }
+}
+
+.deletePostButton {
+  color: var(--color-error);
+  padding: var(--space-2);
+
+  &:hover {
+    background: var(--color-error-alpha);
+    color: var(--color-error);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .trackInfo {
@@ -274,6 +305,33 @@
 
 .shareMenuItemActive {
   background: var(--color-bg-muted);
+}
+
+.menuDivider {
+  height: 1px;
+  background: var(--color-border-light);
+  margin: var(--space-2) 0;
+}
+
+.deleteMenuItem {
+  color: var(--color-error);
+}
+
+.deleteMenuItem:hover {
+  background: var(--color-error-alpha);
+  color: var(--color-error);
+}
+
+.deleteConfirmContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.deleteConfirmActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
 }
 
 /* Add relative class for positioning */

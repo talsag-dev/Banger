@@ -50,6 +50,8 @@ const FeedContent: React.FC<FeedContentProps> = ({
   posts,
   onReaction,
   onComment,
+  onEdit,
+  onDelete,
 }) => (
   <div className={styles.postsList}>
     {posts.map((post) => (
@@ -58,6 +60,8 @@ const FeedContent: React.FC<FeedContentProps> = ({
         post={post}
         onReaction={onReaction}
         onComment={onComment}
+        onEdit={onEdit}
+        onDelete={onDelete}
       />
     ))}
   </div>
@@ -87,6 +91,8 @@ export const FeedContainer: React.FC<FeedContainerProps> = ({
   onReaction,
   onComment,
   onDiscoverPeople,
+  onEdit,
+  onDelete,
 }) => {
   if (isLoading) {
     return (
@@ -123,6 +129,8 @@ export const FeedContainer: React.FC<FeedContainerProps> = ({
             posts={feed.posts}
             onReaction={onReaction}
             onComment={onComment}
+            onEdit={onEdit}
+            onDelete={onDelete}
           />
         )
       )}

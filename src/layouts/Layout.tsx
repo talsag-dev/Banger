@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppHeader } from "../components/AppHeader";
 import { SearchDialog } from "../components/SearchDialog";
@@ -81,12 +81,22 @@ export const Layout: React.FC<LayoutProps> = ({
   // Search data and logic
   const {
     isCheckingAuth,
-    authError,
+    authError: authErrorRaw,
     searchResults,
     isSearching,
-    searchError,
+    searchError: searchErrorRaw,
     onAuthRedirect,
   } = useSearchData(searchQuery);
+
+  // Convert string errors to Error objects for SearchDialog
+  const authError = authErrorRaw !== null ? new Error(authErrorRaw) : null;
+
+  const searchError =
+    searchErrorRaw !== null && searchErrorRaw !== undefined
+      ? searchErrorRaw instanceof Error
+        ? searchErrorRaw
+        : new Error(String(searchErrorRaw))
+      : null;
 
   const handleProfileClick = () => {
     navigate("/profile");
@@ -100,8 +110,12 @@ export const Layout: React.FC<LayoutProps> = ({
     <div className={styles.layoutContainer}>
       <AppHeader
         onSearchClick={() => dispatch({ type: "OPEN_SEARCH" })}
-        onNewPostClick={() => dispatch({ type: "OPEN_NEW_POST" })}
-        onSettingsClick={() => dispatch({ type: "OPEN_SETTINGS" })}
+        onNewPostClick={() => {
+          dispatch({ type: "OPEN_NEW_POST" });
+        }}
+        onSettingsClick={() => {
+          dispatch({ type: "OPEN_SETTINGS" });
+        }}
         onProfileClick={handleProfileClick}
         onHomeClick={handleHomeClick}
       />
@@ -112,9 +126,8 @@ export const Layout: React.FC<LayoutProps> = ({
         {showSidebar && (
           <Sidebar
             onQuickAction={(action) => {
-              if (action === "share-music") {
-                dispatch({ type: "OPEN_NEW_POST" });
-              }
+              // Handle quick action if needed
+              console.log("Quick action triggered:", action);
             }}
             onTrendingClick={(id) => {
               console.log("Trending clicked:", id);
@@ -145,13 +158,18 @@ export const Layout: React.FC<LayoutProps> = ({
 
       <NewPostModal
         isOpen={isNewPostOpen}
-        onClose={() => dispatch({ type: "CLOSE_NEW_POST" })}
-        onConnectSpotify={() => {
-          console.log("Connect Spotify clicked");
+        onClose={() => {
+          dispatch({ type: "CLOSE_NEW_POST" });
         }}
-        onConnectAppleMusic={() => {
-          console.log("Connect Apple Music clicked");
+        onPostCreated={() => {
+          // Optionally refresh feed or show success notification
+          console.log("Post created successfully");
         }}
+        onPostUpdated={() => {
+          console.log("Post updated successfully");
+          dispatch({ type: "CLOSE_NEW_POST" });
+        }}
+        // post={editingPost}
       />
 
       <SettingsModal

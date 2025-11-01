@@ -6,6 +6,8 @@ import {
   ExternalLink,
   Music,
   MoreHorizontal,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { Button } from "../Button";
@@ -21,16 +23,21 @@ import { formatDuration, getTimeAgo } from "./utils";
 import styles from "./MusicPostCard.module.css";
 import { CommentsDialog } from "../CommentsDialog";
 import { PlatformIcon } from "../PlatformIcon";
+import { useAuth } from "../../hooks/useAuth";
 
 export const MusicPostCard: React.FC<MusicPostCardProps> = ({
   post,
   onReaction,
   onComment,
+  onEdit,
+  onDelete,
 }) => {
   const [{ isCommentsOpen }, dispatch] = useReducer(
     musicPostCardReducer,
     initialState
   );
+  const { user } = useAuth();
+  const isOwnPost = user?.id && post.userId;
 
   const {
     userId,
@@ -58,12 +65,36 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
             <span className={styles.timestamp}>{getTimeAgo(timestamp)}</span>
           </div>
         </div>
-        {isCurrentlyListening && (
-          <div className={styles.currentlyListening}>
-            <Music className={styles.pulseIcon} size={16} />
-            <span>Currently listening</span>
-          </div>
-        )}
+        <div className={styles.postHeaderActions}>
+          {isCurrentlyListening && (
+            <div className={styles.currentlyListening}>
+              <Music className={styles.pulseIcon} size={16} />
+              <span>Currently listening</span>
+            </div>
+          )}
+          {isOwnPost && (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onEdit?.(post)}
+                className={styles.editPostButton}
+                leftIcon={<Edit size={16} />}
+                aria-label="Edit post"
+                type="button"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDelete?.(post.id)}
+                className={styles.deletePostButton}
+                leftIcon={<Trash2 size={16} />}
+                aria-label="Delete post"
+                type="button"
+              />
+            </>
+          )}
+        </div>
       </div>
 
       <div className={styles.trackInfo}>
@@ -149,7 +180,7 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
             )}
           </Button>
 
-          {/* Share Menu using Headless UI */}
+          {/* Actions Menu - Share for all, Edit/Delete for own posts */}
           <Menu
             as="div"
             className={`${styles.relative} ${styles.shareMenuContainer}`}

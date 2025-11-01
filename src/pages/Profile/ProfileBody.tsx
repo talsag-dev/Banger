@@ -1,5 +1,3 @@
-import { useReducer, useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
 import { Music, Heart, ExternalLink } from "lucide-react";
 import { clsx } from "clsx";
 import { Button } from "@components/Button";
@@ -8,18 +6,11 @@ import { MusicPostCard } from "@components/MusicPostCard";
 import { Card } from "@components/Card";
 import { PlatformIcon } from "@components/PlatformIcon";
 import { Loading } from "@components/Loading";
-import { useAuth } from "@hooks/useAuth";
-import { useProfileData } from "@hooks/useProfileData";
 import { getPlatformName } from "@utils/platformStyles";
-import type {
-  ProfileProps,
-  ProfileState,
-  ProfileAction,
-  ProfileTab,
-} from "./Profile/types";
+import type { ProfileProps } from "./types";
 import styles from "./Profile.module.css";
 
-const ProfileBody: React.FC<ProfileProps> = ({
+export const ProfileBody: React.FC<ProfileProps> = ({
   userProfile,
   userPosts,
   likedPosts,
@@ -31,6 +22,8 @@ const ProfileBody: React.FC<ProfileProps> = ({
   activeTab,
   onTabChange,
   onFollowToggle,
+  onEditPost,
+  onDeletePost,
 }) => {
   const handleFollowToggle = () => {
     onFollowToggle();
@@ -170,6 +163,8 @@ const ProfileBody: React.FC<ProfileProps> = ({
                   post={post}
                   onReaction={handleReaction}
                   onComment={handleComment}
+                  onEdit={onEditPost}
+                  onDelete={onDeletePost}
                 />
               ))
             ) : (
@@ -199,6 +194,8 @@ const ProfileBody: React.FC<ProfileProps> = ({
                   post={post}
                   onReaction={handleReaction}
                   onComment={handleComment}
+                  onEdit={onEditPost}
+                  onDelete={onDeletePost}
                 />
               ))
             ) : (
@@ -305,95 +302,5 @@ const ProfileBody: React.FC<ProfileProps> = ({
       {renderTabs()}
       {renderTabContent()}
     </div>
-  );
-};
-
-const profileReducer = (
-  state: ProfileState,
-  action: ProfileAction
-): ProfileState => {
-  switch (action.type) {
-    case "SET_ACTIVE_TAB":
-      return { ...state, activeTab: action.payload };
-    default:
-      return state;
-  }
-};
-
-const getInitialTabFromUrl = (searchParams: URLSearchParams): ProfileTab => {
-  const tab = searchParams.get("tab");
-  if (tab === "posts" || tab === "liked" || tab === "playlists") {
-    return tab;
-  }
-  return "posts";
-};
-
-export const Profile: React.FC = () => {
-  const { userId: paramUserId } = useParams<{ userId?: string }>();
-  const { user } = useAuth();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const userId = paramUserId || user?.id;
-  const isOwnProfile = !paramUserId;
-
-  const initialTab = getInitialTabFromUrl(searchParams);
-
-  const [{ activeTab }, dispatch] = useReducer(profileReducer, {
-    activeTab: initialTab,
-  });
-
-  // Sync state with URL param when URL changes (browser back/forward)
-  useEffect(() => {
-    const urlTab = getInitialTabFromUrl(searchParams);
-    if (urlTab !== activeTab) {
-      dispatch({ type: "SET_ACTIVE_TAB", payload: urlTab });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
-  const {
-    userProfile,
-    userPosts,
-    likedPosts,
-    playlists,
-    isLoading,
-    isLoadingLiked,
-    isLoadingPlaylists,
-  } = useProfileData(userId, activeTab);
-
-  const handleFollowToggle = () => {
-    if (!userProfile || isOwnProfile) return;
-    // Optimistic update - you might want to make an API call here
-    // For now, we'll just toggle the local state
-    // This would need to be handled in the hook if you want to persist it
-  };
-
-  const handleTabChange = (tab: ProfileTab) => {
-    dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
-
-    // Update URL when user manually changes tab
-    if (tab !== "posts") {
-      setSearchParams({ tab }, { replace: true });
-    } else {
-      // Remove tab param if it's "posts" (default)
-      const newParams = new URLSearchParams(searchParams);
-      newParams.delete("tab");
-      setSearchParams(newParams, { replace: true });
-    }
-  };
-
-  return (
-    <ProfileBody
-      userProfile={userProfile}
-      userPosts={userPosts}
-      likedPosts={likedPosts}
-      playlists={playlists}
-      isLoading={isLoading}
-      isLoadingLiked={isLoadingLiked}
-      isLoadingPlaylists={isLoadingPlaylists}
-      isOwnProfile={isOwnProfile}
-      activeTab={activeTab}
-      onTabChange={handleTabChange}
-      onFollowToggle={handleFollowToggle}
-    />
   );
 };
