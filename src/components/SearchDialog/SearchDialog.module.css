@@ -6,7 +6,7 @@
 .searchBackdrop {
   position: fixed;
   inset: 0;
-  background: var(--color-overlay);
+  background: var(--color-bg-overlay);
 }
 
 .searchDialogContainer {
@@ -30,7 +30,7 @@
 
 /* Transition Classes */
 .searchBackdropEnter {
-  transition: opacity 300ms ease-out;
+  transition: opacity var(--transition-slow);
 }
 
 .searchBackdropEnterFrom {
@@ -42,7 +42,7 @@
 }
 
 .searchBackdropLeave {
-  transition: opacity 200ms ease-in;
+  transition: opacity var(--transition-base);
 }
 
 .searchBackdropLeaveFrom {
@@ -54,7 +54,7 @@
 }
 
 .searchPanelEnter {
-  transition: opacity 300ms ease-out, transform 300ms ease-out;
+  transition: var(--transition-slow);
 }
 
 .searchPanelEnterFrom {
@@ -68,7 +68,7 @@
 }
 
 .searchPanelLeave {
-  transition: opacity 200ms ease-in, transform 200ms ease-in;
+  transition: var(--transition-base);
 }
 
 .searchPanelLeaveFrom {

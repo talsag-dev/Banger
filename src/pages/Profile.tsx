@@ -1,99 +1,39 @@
 import { useReducer, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { User, Music, Heart } from "lucide-react";
+import { useParams, useSearchParams } from "react-router-dom";
+import { Music, Heart, ExternalLink } from "lucide-react";
+import { clsx } from "clsx";
 import { Button } from "@components/Button";
 import { Text } from "@components/Text";
 import { MusicPostCard } from "@components/MusicPostCard";
-import type { MusicPost } from "@types";
-import { http } from "@utils/http";
+import { Card } from "@components/Card";
+import { PlatformIcon } from "@components/PlatformIcon";
+import { Loading } from "@components/Loading";
+import { useAuth } from "@hooks/useAuth";
+import { useProfileData } from "@hooks/useProfileData";
+import { getPlatformName } from "@utils/platformStyles";
+import type {
+  ProfileProps,
+  ProfileState,
+  ProfileAction,
+  ProfileTab,
+} from "./Profile/types";
 import styles from "./Profile.module.css";
-import type { UserProfile } from "@types";
 
-// State type for our profile reducer
-interface ProfileState {
-  userProfile: UserProfile | null;
-  userPosts: MusicPost[];
-  isLoading: boolean;
-  activeTab: "posts" | "liked" | "playlists";
-}
-
-// Action types
-type ProfileAction =
-  | { type: "SET_LOADING"; payload: boolean }
-  | { type: "SET_PROFILE"; payload: UserProfile }
-  | { type: "SET_POSTS"; payload: MusicPost[] }
-  | { type: "SET_ACTIVE_TAB"; payload: "posts" | "liked" | "playlists" }
-  | { type: "TOGGLE_FOLLOW" };
-
-const initialState: ProfileState = {
-  userProfile: null,
-  userPosts: [],
-  isLoading: true,
-  activeTab: "posts",
-};
-
-const profileReducer = (
-  state: ProfileState,
-  action: ProfileAction
-): ProfileState => {
-  switch (action.type) {
-    case "SET_LOADING":
-      return { ...state, isLoading: action.payload };
-    case "SET_PROFILE":
-      return { ...state, userProfile: action.payload };
-    case "SET_POSTS":
-      return { ...state, userPosts: action.payload };
-    case "SET_ACTIVE_TAB":
-      return { ...state, activeTab: action.payload };
-    case "TOGGLE_FOLLOW":
-      if (!state.userProfile) return state;
-      return {
-        ...state,
-        userProfile: {
-          ...state.userProfile,
-          isFollowing: !state.userProfile.isFollowing,
-          followersCount: state.userProfile.isFollowing
-            ? state.userProfile.followersCount - 1
-            : state.userProfile.followersCount + 1,
-        },
-      };
-    default:
-      return state;
-  }
-};
-
-export const Profile: React.FC = () => {
-  const { userId } = useParams<{ userId?: string }>();
-  const [{ userProfile, userPosts, isLoading, activeTab }, dispatch] =
-    useReducer(profileReducer, initialState);
-
-  const isOwnProfile = !userId;
-
-  useEffect(() => {
-    const loadProfile = async () => {
-      dispatch({ type: "SET_LOADING", payload: true });
-      try {
-        const profile = await http<UserProfile>(
-          `/users/${userId || "current-user"}/profile`
-        );
-        const postsData = await http<{ posts: MusicPost[] }>(
-          `/posts/user/${userId || "current-user"}`
-        );
-        dispatch({ type: "SET_PROFILE", payload: profile });
-        dispatch({ type: "SET_POSTS", payload: postsData.posts || [] });
-      } catch {
-        dispatch({ type: "SET_POSTS", payload: [] });
-      } finally {
-        dispatch({ type: "SET_LOADING", payload: false });
-      }
-    };
-
-    loadProfile();
-  }, [userId]);
-
+const ProfileBody: React.FC<ProfileProps> = ({
+  userProfile,
+  userPosts,
+  likedPosts,
+  playlists,
+  isLoading,
+  isLoadingLiked,
+  isLoadingPlaylists,
+  isOwnProfile,
+  activeTab,
+  onTabChange,
+  onFollowToggle,
+}) => {
   const handleFollowToggle = () => {
-    if (!userProfile || isOwnProfile) return;
-    dispatch({ type: "TOGGLE_FOLLOW" });
+    onFollowToggle();
   };
 
   const handleReaction = (postId: string, reaction: string) => {
@@ -188,7 +128,7 @@ export const Profile: React.FC = () => {
         className={`${styles.tab} ${
           activeTab === "posts" ? styles.activeTab : ""
         }`}
-        onClick={() => dispatch({ type: "SET_ACTIVE_TAB", payload: "posts" })}
+        onClick={() => onTabChange("posts")}
       >
         <Music size={16} />
         Posts
@@ -197,7 +137,7 @@ export const Profile: React.FC = () => {
         className={`${styles.tab} ${
           activeTab === "liked" ? styles.activeTab : ""
         }`}
-        onClick={() => dispatch({ type: "SET_ACTIVE_TAB", payload: "liked" })}
+        onClick={() => onTabChange("liked")}
       >
         <Heart size={16} />
         Liked
@@ -206,9 +146,7 @@ export const Profile: React.FC = () => {
         className={`${styles.tab} ${
           activeTab === "playlists" ? styles.activeTab : ""
         }`}
-        onClick={() =>
-          dispatch({ type: "SET_ACTIVE_TAB", payload: "playlists" })
-        }
+        onClick={() => onTabChange("playlists")}
       >
         <Music size={16} />
         Playlists
@@ -218,11 +156,7 @@ export const Profile: React.FC = () => {
 
   const renderTabContent = () => {
     if (isLoading) {
-      return (
-        <div className={styles.loadingState}>
-          <Text color="muted">Loading...</Text>
-        </div>
-      );
+      return <Loading message="Loading..." />;
     }
 
     switch (activeTab) {
@@ -239,7 +173,7 @@ export const Profile: React.FC = () => {
                 />
               ))
             ) : (
-              <div className={styles.emptyState}>
+              <div className={styles.empty}>
                 <Music size={48} className="text-gray-400" />
                 <Text color="muted">No posts yet</Text>
                 {isOwnProfile && (
@@ -253,18 +187,102 @@ export const Profile: React.FC = () => {
         );
 
       case "liked":
+        if (isLoadingLiked) {
+          return <Loading message="Loading liked posts..." />;
+        }
         return (
-          <div className={styles.emptyState}>
-            <Heart size={48} className="text-gray-400" />
-            <Text color="muted">No liked posts yet</Text>
+          <div className={styles.postsGrid}>
+            {likedPosts.length > 0 ? (
+              likedPosts.map((post) => (
+                <MusicPostCard
+                  key={post.id}
+                  post={post}
+                  onReaction={handleReaction}
+                  onComment={handleComment}
+                />
+              ))
+            ) : (
+              <div className={styles.empty}>
+                <Heart size={48} className="text-gray-400" />
+                <Text color="muted">No liked posts yet</Text>
+                {isOwnProfile && (
+                  <Text color="muted" size="sm">
+                    Start liking posts to see them here!
+                  </Text>
+                )}
+              </div>
+            )}
           </div>
         );
 
       case "playlists":
+        if (isLoadingPlaylists) {
+          return <Loading message="Loading playlists..." />;
+        }
         return (
-          <div className={styles.emptyState}>
-            <Music size={48} className="text-gray-400" />
-            <Text color="muted">No playlists yet</Text>
+          <div className={styles.playlistsGrid}>
+            {playlists.length > 0 ? (
+              playlists.map((playlist) => (
+                <Card
+                  key={playlist.id}
+                  image={playlist.image}
+                  imageAlt={playlist.name}
+                  imagePlaceholder={<Music size={32} />}
+                >
+                  <Text weight="semibold" size="sm">
+                    {playlist.name}
+                  </Text>
+                  <Text color="muted" size="xs">
+                    {playlist.owner} • {playlist.trackCount} tracks
+                  </Text>
+                  {playlist.description && (
+                    <Text
+                      color="muted"
+                      size="xs"
+                      className={styles.playlistDescription}
+                    >
+                      {playlist.description}
+                    </Text>
+                  )}
+                  {playlist.externalUrl && (
+                    <Text
+                      as="a"
+                      href={playlist.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      variant="caption"
+                      className={clsx(styles.playlistLink, {
+                        [styles.playlistLinkSpotify]:
+                          playlist.provider === "spotify",
+                        [styles.playlistLinkAppleMusic]:
+                          playlist.provider === "apple-music",
+                        [styles.playlistLinkYoutubeMusic]:
+                          playlist.provider === "youtube-music",
+                        [styles.playlistLinkSoundcloud]:
+                          playlist.provider === "soundcloud",
+                      })}
+                      onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
+                        e.stopPropagation()
+                      }
+                    >
+                      <PlatformIcon platform={playlist.provider} size={16} />
+                      <span>Open in {getPlatformName(playlist.provider)}</span>
+                      <ExternalLink size={14} />
+                    </Text>
+                  )}
+                </Card>
+              ))
+            ) : (
+              <div className={styles.empty}>
+                <Music size={48} className="text-gray-400" />
+                <Text color="muted">No playlists yet</Text>
+                {isOwnProfile && (
+                  <Text color="muted" size="sm">
+                    Connect your music services to see your playlists here!
+                  </Text>
+                )}
+              </div>
+            )}
           </div>
         );
 
@@ -276,10 +294,7 @@ export const Profile: React.FC = () => {
   if (isLoading && !userProfile) {
     return (
       <div className={styles.profileContainer}>
-        <div className={styles.loadingState}>
-          <User size={48} className="text-gray-400" />
-          <Text color="muted">Loading profile...</Text>
-        </div>
+        <Loading message="Loading profile..." />
       </div>
     );
   }
@@ -290,5 +305,95 @@ export const Profile: React.FC = () => {
       {renderTabs()}
       {renderTabContent()}
     </div>
+  );
+};
+
+const profileReducer = (
+  state: ProfileState,
+  action: ProfileAction
+): ProfileState => {
+  switch (action.type) {
+    case "SET_ACTIVE_TAB":
+      return { ...state, activeTab: action.payload };
+    default:
+      return state;
+  }
+};
+
+const getInitialTabFromUrl = (searchParams: URLSearchParams): ProfileTab => {
+  const tab = searchParams.get("tab");
+  if (tab === "posts" || tab === "liked" || tab === "playlists") {
+    return tab;
+  }
+  return "posts";
+};
+
+export const Profile: React.FC = () => {
+  const { userId: paramUserId } = useParams<{ userId?: string }>();
+  const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const userId = paramUserId || user?.id;
+  const isOwnProfile = !paramUserId;
+
+  const initialTab = getInitialTabFromUrl(searchParams);
+
+  const [{ activeTab }, dispatch] = useReducer(profileReducer, {
+    activeTab: initialTab,
+  });
+
+  // Sync state with URL param when URL changes (browser back/forward)
+  useEffect(() => {
+    const urlTab = getInitialTabFromUrl(searchParams);
+    if (urlTab !== activeTab) {
+      dispatch({ type: "SET_ACTIVE_TAB", payload: urlTab });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  const {
+    userProfile,
+    userPosts,
+    likedPosts,
+    playlists,
+    isLoading,
+    isLoadingLiked,
+    isLoadingPlaylists,
+  } = useProfileData(userId, activeTab);
+
+  const handleFollowToggle = () => {
+    if (!userProfile || isOwnProfile) return;
+    // Optimistic update - you might want to make an API call here
+    // For now, we'll just toggle the local state
+    // This would need to be handled in the hook if you want to persist it
+  };
+
+  const handleTabChange = (tab: ProfileTab) => {
+    dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
+
+    // Update URL when user manually changes tab
+    if (tab !== "posts") {
+      setSearchParams({ tab }, { replace: true });
+    } else {
+      // Remove tab param if it's "posts" (default)
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete("tab");
+      setSearchParams(newParams, { replace: true });
+    }
+  };
+
+  return (
+    <ProfileBody
+      userProfile={userProfile}
+      userPosts={userPosts}
+      likedPosts={likedPosts}
+      playlists={playlists}
+      isLoading={isLoading}
+      isLoadingLiked={isLoadingLiked}
+      isLoadingPlaylists={isLoadingPlaylists}
+      isOwnProfile={isOwnProfile}
+      activeTab={activeTab}
+      onTabChange={handleTabChange}
+      onFollowToggle={handleFollowToggle}
+    />
   );
 };

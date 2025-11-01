@@ -9,15 +9,15 @@
 
 .fullScreen {
   min-height: 100vh;
-  background: var(--color-bg-app, #f7f7f8);
+  background: var(--color-bg-secondary);
 }
 
 .spinner {
   width: 24px;
   height: 24px;
   border: 3px solid transparent;
-  border-top: 3px solid var(--color-primary, #7c3aed);
-  border-radius: 50%;
+  border-top: 3px solid var(--color-primary);
+  border-radius: var(--radius-full);
   animation: spin 1s linear infinite;
 }
 

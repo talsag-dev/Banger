@@ -7,7 +7,7 @@
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--color-bg-overlay);
   backdrop-filter: blur(4px);
 }
 
@@ -83,8 +83,7 @@
 
 /* Transition Classes */
 .backdropEnter {
-  transition: opacity var(--transition-duration-300)
-    var(--transition-timing-ease-out);
+  transition: opacity var(--transition-slow);
 }
 
 .backdropEnterFrom {
@@ -96,8 +95,7 @@
 }
 
 .backdropLeave {
-  transition: opacity var(--transition-duration-200)
-    var(--transition-timing-ease-in);
+  transition: opacity var(--transition-base);
 }
 
 .backdropLeaveFrom {
@@ -109,13 +107,12 @@
 }
 
 .panelEnter {
-  transition: all var(--transition-duration-300)
-    var(--transition-timing-ease-out);
+  transition: var(--transition-slow);
 }
 
 .panelEnterFrom {
   opacity: 0;
-  transform: scale(0.95) translateY(-8px);
+  transform: scale(0.95) translateY(calc(var(--space-2) * -1));
 }
 
 .panelEnterTo {
@@ -124,8 +121,7 @@
 }
 
 .panelLeave {
-  transition: all var(--transition-duration-200)
-    var(--transition-timing-ease-in);
+  transition: var(--transition-base);
 }
 
 .panelLeaveFrom {
@@ -135,7 +131,7 @@
 
 .panelLeaveTo {
   opacity: 0;
-  transform: scale(0.95) translateY(-8px);
+  transform: scale(0.95) translateY(calc(var(--space-2) * -1));
 }
 
 /* Responsive adjustments */

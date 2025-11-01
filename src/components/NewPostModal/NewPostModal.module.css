@@ -6,7 +6,7 @@
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background: var(--color-overlay);
+  background: var(--color-bg-overlay);
 }
 
 .modalContainer {
@@ -30,7 +30,7 @@
 
 /* Transition Classes */
 .newpostBackdropEnter {
-  transition: opacity 300ms ease-out;
+  transition: opacity var(--transition-slow);
 }
 
 .newpostBackdropEnterFrom {
@@ -42,7 +42,7 @@
 }
 
 .newpostBackdropLeave {
-  transition: opacity 200ms ease-in;
+  transition: opacity var(--transition-base);
 }
 
 .newpostBackdropLeaveFrom {
@@ -54,7 +54,7 @@
 }
 
 .newpostPanelEnter {
-  transition: opacity 300ms ease-out, transform 300ms ease-out;
+  transition: var(--transition-slow);
 }
 
 .newpostPanelEnterFrom {
@@ -68,7 +68,7 @@
 }
 
 .newpostPanelLeave {
-  transition: opacity 200ms ease-in, transform 200ms ease-in;
+  transition: var(--transition-base);
 }
 
 .newpostPanelLeaveFrom {

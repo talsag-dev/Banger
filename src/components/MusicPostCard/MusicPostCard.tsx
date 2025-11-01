@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { clsx } from "clsx";
 import { Button } from "../Button";
+import { Card } from "../Card";
 import {
   REACTION_MAP,
   AVAILABLE_REACTIONS,
@@ -44,7 +45,7 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
   } = post;
 
   return (
-    <div className={styles.musicPostCard}>
+    <Card variant="noImage" className={styles.musicPostCard}>
       <div className={styles.postHeader}>
         <div className={styles.userInfo}>
           <img
@@ -214,6 +215,6 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
         postId={id}
         onComment={onComment}
       />
-    </div>
+    </Card>
   );
 };

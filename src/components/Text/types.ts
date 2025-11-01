@@ -1,6 +1,7 @@
-import type { ReactNode, ElementType } from "react";
+import type { ReactNode, ElementType, ComponentPropsWithoutRef } from "react";
 
-export interface TextProps {
+type PolymorphicProps<T extends ElementType> = {
+  as?: T;
   children: ReactNode;
   variant?:
     | "headline"
@@ -21,8 +22,9 @@ export interface TextProps {
     | "warning"
     | "error";
   align?: "left" | "center" | "right" | "justify";
-  as?: ElementType;
   className?: string;
   truncate?: boolean;
   "data-testid"?: string;
-}
+} & Omit<ComponentPropsWithoutRef<T>, "className" | "children" | "as">;
+
+export type TextProps<T extends ElementType = "p"> = PolymorphicProps<T>;

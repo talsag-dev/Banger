@@ -22,10 +22,14 @@
   transition: var(--transition-all);
   position: relative;
   overflow: hidden;
-}
 
-.appTitleContainer:hover {
-  transform: translateY(-1px);
+  &:hover {
+    transform: translateY(-1px);
+
+    .appTitle {
+      animation-duration: 1s;
+    }
+  }
 }
 
 .appTitle {
@@ -48,10 +52,6 @@
   50% {
     background-position: 100% 50%;
   }
-}
-
-.appTitleContainer:hover .appTitle {
-  animation-duration: 1s;
 }
 
 .headerActions {

@@ -3,19 +3,19 @@ import { clsx } from "clsx";
 import type { TextProps } from "./types";
 import styles from "./Text.module.css";
 
-export const Text: React.FC<TextProps> = ({
+export function Text<T extends React.ElementType = "p">({
   children,
   variant = "body",
   size,
   weight,
   color = "primary",
   align = "left",
-  as: Component = "p",
+  as,
   className,
   truncate = false,
   "data-testid": testId,
   ...rest
-}) => {
+}: TextProps<T>) {
   const variantClasses = {
     headline: styles.variantHeadline,
     subheadline: styles.variantSubheadline,
@@ -81,7 +81,7 @@ export const Text: React.FC<TextProps> = ({
     }
   };
 
-  const ElementComponent = Component === "p" ? getDefaultElement() : Component;
+  const Component = as || getDefaultElement();
 
   const textClasses = clsx(
     styles.text,
@@ -97,8 +97,8 @@ export const Text: React.FC<TextProps> = ({
   );
 
   return (
-    <ElementComponent className={textClasses} data-testid={testId} {...rest}>
+    <Component className={textClasses} data-testid={testId} {...rest}>
       {children}
-    </ElementComponent>
+    </Component>
   );
-};
+}

@@ -2,9 +2,9 @@
 .dialogOverlay {
   position: fixed;
   inset: 0;
-  background: var(--color-overlay);
-  backdrop-filter: blur(var(--blur-sm));
-  transition: opacity 300ms ease-out;
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(4px);
+  transition: opacity var(--transition-slow);
 }
 
 .dialogContainer {
@@ -31,7 +31,7 @@
   max-height: 600px;
   display: flex;
   flex-direction: column;
-  transition: opacity 300ms ease-out, transform 300ms ease-out;
+  transition: var(--transition-slow);
 }
 
 .dialogTitle {

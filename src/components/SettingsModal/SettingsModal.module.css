@@ -6,7 +6,7 @@
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background: var(--color-overlay);
+  background: var(--color-bg-overlay);
 }
 
 .modalContainer {
@@ -31,7 +31,7 @@
 
 /* Transition Classes */
 .modalBackdropEnter {
-  transition: opacity 300ms ease-out;
+  transition: opacity var(--transition-slow);
 }
 
 .modalBackdropEnterFrom {
@@ -43,7 +43,7 @@
 }
 
 .modalBackdropLeave {
-  transition: opacity 200ms ease-in;
+  transition: opacity var(--transition-base);
 }
 
 .modalBackdropLeaveFrom {
@@ -55,7 +55,7 @@
 }
 
 .modalPanelEnter {
-  transition: opacity 300ms ease-out, transform 300ms ease-out;
+  transition: var(--transition-slow);
 }
 
 .modalPanelEnterFrom {
@@ -69,7 +69,7 @@
 }
 
 .modalPanelLeave {
-  transition: opacity 200ms ease-in, transform 200ms ease-in;
+  transition: var(--transition-base);
 }
 
 .modalPanelLeaveFrom {
@@ -122,8 +122,8 @@
 }
 
 .settingItem {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-border-light);
 
   &:last-child {
     border-bottom: none;
@@ -140,9 +140,9 @@
   width: 48px;
   height: 24px;
   background: var(--color-bg-muted);
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   border: none;
-  transition: background-color 200ms ease;
+  transition: var(--transition-base);
 
   &[data-checked] {
     background: var(--color-primary);
@@ -151,14 +151,14 @@
   &::after {
     content: "";
     position: absolute;
-    top: 2px;
-    left: 2px;
+    top: var(--space-0_5);
+    left: var(--space-0_5);
     width: 20px;
     height: 20px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: transform 200ms ease;
+    background: var(--color-white);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-base);
   }
 
   &[data-checked]::after {
@@ -176,14 +176,14 @@
 
 .settingInfo {
   flex: 1;
-  margin-right: 16px;
+  margin-right: var(--space-4);
 }
 
 .settingLabel {
   display: block;
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
 }
 
 .settingDescription {

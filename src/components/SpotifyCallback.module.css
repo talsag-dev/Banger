@@ -3,46 +3,46 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-bg-muted, #f9fafb);
+  background-color: var(--color-bg-secondary);
 }
 
 .card {
   width: 100%;
   max-width: 480px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  padding: 32px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-8);
   text-align: center;
 }
 
 .iconCircle {
   height: 48px;
   width: 48px;
-  border-radius: 9999px;
-  margin: 0 auto 16px;
+  border-radius: var(--radius-full);
+  margin: 0 auto var(--space-4);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .iconSuccess {
-  background: #ecfdf5;
-  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--color-success);
 }
 
 .iconError {
-  background: #fef2f2;
-  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--color-error);
 }
 
 .spinner {
   height: 48px;
   width: 48px;
-  border-radius: 9999px;
-  border: 3px solid #eee;
-  border-top-color: #16a34a;
-  margin: 0 auto 16px;
+  border-radius: var(--radius-full);
+  border: 3px solid var(--color-gray-200);
+  border-top-color: var(--color-success);
+  margin: 0 auto var(--space-4);
   animation: spin 0.9s linear infinite;
 }
 
@@ -53,15 +53,15 @@
 }
 
 .subtitle {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 
 .bodyText {
-  color: #6b7280;
+  color: var(--color-gray-500);
 }
 
 .returnButton {
-  margin-top: 16px;
+  margin-top: var(--space-4);
 }
 
 

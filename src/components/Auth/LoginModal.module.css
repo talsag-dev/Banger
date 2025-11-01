@@ -4,12 +4,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-bg-overlay);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--z-modal);
   padding: var(--space-4);
 }
 
@@ -67,17 +67,17 @@
   height: 48px;
   border: 1px solid var(--color-border-medium);
   background: var(--color-bg-secondary);
-  transition: all 0.2s ease;
-}
+  transition: var(--transition-all);
 
-.authButton:hover {
-  background: var(--color-bg-tertiary);
-  border-color: var(--color-border-strong);
-  transform: translateY(-1px);
-}
+  &:hover {
+    background: var(--color-bg-muted);
+    border-color: var(--color-border-dark);
+    transform: translateY(-1px);
+  }
 
-.authButton:active {
-  transform: translateY(0);
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .error {
@@ -114,12 +114,12 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
-  transition: all 0.2s ease;
-}
+  transition: var(--transition-all);
 
-.closeButton:hover {
-  background: var(--color-bg-secondary);
-  color: var(--color-text-primary);
+  &:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+  }
 }
 
 @media (max-width: 480px) {

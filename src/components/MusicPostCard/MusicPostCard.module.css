@@ -1,18 +1,6 @@
 .musicPostCard {
-  background: var(--color-bg-primary);
-  border-radius: var(--radius-xl);
-  padding: var(--space-5);
   margin-bottom: var(--space-5);
-  box-shadow: var(--shadow-md);
-  transition: var(--transition-all);
-  border: 1px solid var(--color-border-light);
   overflow: visible;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-xl);
-    border-color: var(--color-border-medium);
-  }
 }
 
 .postHeader {
@@ -198,20 +186,20 @@
 .reactionsMenuBtn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   background: none;
   border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 14px;
-  font-weight: 500;
-  color: #666;
+  transition: var(--transition-all);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
 
   &:hover {
-    background: #f5f5f5;
-    color: #333;
+    background: var(--color-bg-muted);
+    color: var(--color-text-primary);
   }
 }
 
@@ -223,13 +211,13 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  padding: 8px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-2);
   display: flex;
-  gap: 4px;
-  border: 1px solid #e0e0e0;
+  gap: var(--space-1);
+  border: 1px solid var(--color-border-light);
 }
 
 .reactionMenuItem {
@@ -237,32 +225,32 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: var(--transition-all);
 
   &:hover {
-    background: #f0f8ff;
+    background: var(--color-primary-50);
     transform: scale(1.1);
   }
 }
 
 .reactionMenuItemActive {
-  background: #f0f8ff;
+  background: var(--color-primary-50);
   transform: scale(1.1);
 }
 
 /* Share Menu */
 .shareMenu {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + var(--space-1));
   right: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  padding: 8px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-2);
   min-width: 160px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border-light);
   transform-origin: top right;
 }
 
@@ -272,20 +260,20 @@
   text-align: left;
   background: none;
   border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 14px;
-  color: #333;
-  transition: background 0.2s ease;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  transition: var(--transition-base);
 
   &:hover {
-    background: #f5f5f5;
+    background: var(--color-bg-muted);
   }
 }
 
 .shareMenuItemActive {
-  background: #f5f5f5;
+  background: var(--color-bg-muted);
 }
 
 /* Add relative class for positioning */
