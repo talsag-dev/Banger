@@ -203,12 +203,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const signUpWithEmail = useCallback(
-    async (email: string, password: string, displayName: string) => {
+    async (
+      email: string,
+      password: string,
+      displayName: string,
+      username: string
+    ) => {
       try {
         setError(null);
         await http(`/auth/signup`, {
           method: "POST",
-          body: JSON.stringify({ email, password, displayName }),
+          body: { email, password, displayName, username },
         });
         // Refresh profile after successful signup
         await refreshProfile();
@@ -226,7 +231,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setError(null);
         await http(`/auth/login`, {
           method: "POST",
-          body: JSON.stringify({ email, password }),
+          body: { email, password },
         });
         // Refresh profile after successful login
         await refreshProfile();
@@ -248,6 +253,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(err instanceof Error ? err.message : "Logout failed");
     }
   }, []);
+
+  const updateProfile = useCallback(
+    async (data: { username?: string; displayName?: string; bio?: string }) => {
+      try {
+        setError(null);
+        const response = await http<{ data: { user: AuthUser } }>(
+          `/users/profile`,
+          {
+            method: "PUT",
+            body: data,
+          }
+        );
+        // Update local user state with new data
+        if (user && response.data?.user) {
+          setUser({
+            ...user,
+            ...response.data.user,
+          });
+        }
+        // Refresh profile to get latest data
+        await refreshProfile();
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to update profile"
+        );
+        throw err;
+      }
+    },
+    [user, refreshProfile]
+  );
 
   // ===== MUSIC SERVICE INTEGRATIONS =====
 
@@ -371,6 +406,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Refresh actions
     refreshProfile,
     refreshMusicIntegrations,
+
+    // Update profile
+    updateProfile,
   };
 
   return (

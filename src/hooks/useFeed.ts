@@ -6,7 +6,7 @@ export const useFeed = () => {
   return useQuery({
     queryKey: ["feed"],
     queryFn: async (): Promise<Feed> => {
-      const data = await http<{ posts: MusicPost[] }>(`/posts`);
+      const data = await http<{ posts: MusicPost[] }>(`/posts/feed`);
       return {
         posts: data.posts || [],
         hasMore: false,

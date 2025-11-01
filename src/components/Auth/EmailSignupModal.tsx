@@ -15,6 +15,7 @@ export const EmailSignupModal: React.FC<EmailSignupModalProps> = ({
     email: "",
     password: "",
     displayName: "",
+    username: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export const EmailSignupModal: React.FC<EmailSignupModalProps> = ({
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
-      setFormData({ email: "", password: "", displayName: "" });
+      setFormData({ email: "", password: "", displayName: "", username: "" });
       setFormError(null);
     }
   }, [isOpen]);
@@ -46,10 +47,16 @@ export const EmailSignupModal: React.FC<EmailSignupModalProps> = ({
         setIsSubmitting(false);
         return;
       }
+      if (!formData.username.trim()) {
+        setFormError("Username is required");
+        setIsSubmitting(false);
+        return;
+      }
       await signUpWithEmail(
         formData.email,
         formData.password,
-        formData.displayName
+        formData.displayName,
+        formData.username
       );
       onClose();
     } catch (err) {
@@ -84,6 +91,22 @@ export const EmailSignupModal: React.FC<EmailSignupModalProps> = ({
               onChange={handleInputChange}
               className={styles.input}
               placeholder="Enter your display name"
+              required
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="username" className={styles.label}>
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+              className={styles.input}
+              placeholder="Enter your username"
               required
             />
           </div>

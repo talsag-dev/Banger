@@ -10,6 +10,7 @@ export type MusicProvider =
 export interface AuthUser {
   id: string;
   email: string;
+  username?: string;
   displayName: string;
   avatar?: string;
   authProvider: AuthProvider; // How they signed up
@@ -78,7 +79,8 @@ export interface AuthActions {
   signUpWithEmail: (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
+    username: string
   ) => Promise<void>;
   loginWithEmail: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -95,6 +97,13 @@ export interface AuthActions {
   // Refresh data
   refreshProfile: () => Promise<void>;
   refreshMusicIntegrations: () => Promise<void>;
+
+  // Update profile
+  updateProfile: (data: {
+    username?: string;
+    displayName?: string;
+    bio?: string;
+  }) => Promise<void>;
 }
 
 export interface AuthContextType extends AuthState, AuthActions {}

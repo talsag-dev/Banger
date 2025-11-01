@@ -5,6 +5,7 @@ import { DeletePostModal } from "@components/DeletePostModal";
 import { useAuth } from "@hooks/useAuth";
 import { useProfileData } from "@hooks/useProfileData";
 import { useDeletePost } from "@hooks/useDeletePost";
+import { useToggleFollow } from "@hooks/useFollowUser";
 import type { ProfileState, ProfileAction, ProfileTab } from "./types";
 import type { MusicPost } from "@types";
 import { getInitialTabFromUrl } from "@utils/getInitialTab";
@@ -79,11 +80,19 @@ export const Profile = () => {
     isLoadingPlaylists,
   } = useProfileData(userId, activeTab);
 
-  const handleFollowToggle = () => {
+  const { mutateAsync: toggleFollow } = useToggleFollow();
+
+  const handleFollowToggle = async () => {
     if (!userProfile || isOwnProfile) return;
-    // Optimistic update - you might want to make an API call here
-    // For now, we'll just toggle the local state
-    // This would need to be handled in the hook if you want to persist it
+
+    try {
+      await toggleFollow({
+        userId: userProfile.id,
+        type: userProfile.isFollowing ? "unfollow" : "follow",
+      });
+    } catch (error) {
+      console.error("Failed to toggle follow:", error);
+    }
   };
 
   const handleTabChange = (tab: ProfileTab) => {

@@ -41,6 +41,7 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
 
   const {
     userId,
+    username,
     timestamp,
     track,
     feeling,
@@ -61,7 +62,7 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
             className={styles.userAvatar}
           />
           <div>
-            <h4 className={styles.username}>@{userId}</h4>
+            <h4 className={styles.username}>@{username || userId}</h4>
             <span className={styles.timestamp}>{getTimeAgo(timestamp)}</span>
           </div>
         </div>

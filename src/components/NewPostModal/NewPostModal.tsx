@@ -159,10 +159,7 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
 }) => {
   const { isAuthenticated } = useAuth();
   const isEditMode = !!post;
-  const [state, dispatch] = useReducer(
-    newPostReducer,
-    getInitialState(post)
-  );
+  const [state, dispatch] = useReducer(newPostReducer, getInitialState(post));
 
   const {
     mutateAsync: createPost,
@@ -283,6 +280,9 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
           track_preview_url: state.selectedTrack.preview_url || undefined,
           track_external_url:
             state.selectedTrack.external_urls.spotify || undefined,
+          track_duration: state.selectedTrack.duration_ms
+            ? Math.floor(state.selectedTrack.duration_ms / 1000)
+            : undefined, // Convert milliseconds to seconds
           caption: state.caption.trim() || undefined,
           feeling: state.feeling.trim() || undefined,
           is_currently_listening: false,

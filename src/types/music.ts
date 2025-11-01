@@ -13,6 +13,7 @@ export interface Track {
 export interface MusicPost {
   id: string;
   userId: string;
+  username?: string;
   track: Track;
   feeling?: string;
   caption?: string;

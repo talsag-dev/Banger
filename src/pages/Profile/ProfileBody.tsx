@@ -10,7 +10,7 @@ import { getPlatformName } from "@utils/platformStyles";
 import type { ProfileProps } from "./types";
 import styles from "./Profile.module.css";
 
-export const ProfileBody: React.FC<ProfileProps> = ({
+export const ProfileBody = ({
   userProfile,
   userPosts,
   likedPosts,
@@ -24,7 +24,7 @@ export const ProfileBody: React.FC<ProfileProps> = ({
   onFollowToggle,
   onEditPost,
   onDeletePost,
-}) => {
+}: ProfileProps) => {
   const handleFollowToggle = () => {
     onFollowToggle();
   };
@@ -107,7 +107,7 @@ export const ProfileBody: React.FC<ProfileProps> = ({
               variant={userProfile.isFollowing ? "secondary" : "primary"}
               onClick={handleFollowToggle}
             >
-              {userProfile.isFollowing ? "Following" : "Follow"}
+              {userProfile.isFollowing ? "Unfollow" : "Follow"}
             </Button>
           )}
         </div>

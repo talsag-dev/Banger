@@ -9,6 +9,7 @@ export interface CreatePostData {
   track_image?: string;
   track_preview_url?: string;
   track_external_url?: string;
+  track_duration?: number; // in seconds
   caption?: string;
   feeling?: string;
   is_currently_listening?: boolean;

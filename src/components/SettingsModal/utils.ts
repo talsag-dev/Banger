@@ -40,7 +40,7 @@ export const saveSettings = async (settings: UserSettings): Promise<void> => {
     // Using central HTTP client for consistency
     await http(`/user/settings`, {
       method: "PUT",
-      body: JSON.stringify(settings),
+      body: settings,
     });
 
     console.log("Settings saved successfully");

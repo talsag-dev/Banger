@@ -13,7 +13,7 @@ export interface ProfileProps {
   isOwnProfile: boolean;
   activeTab: ProfileTab;
   onTabChange: (tab: ProfileTab) => void;
-  onFollowToggle: () => void;
+  onFollowToggle: () => void | Promise<void>;
   onEditPost?: (post: MusicPost) => void;
   onDeletePost?: (postId: string) => void;
 }

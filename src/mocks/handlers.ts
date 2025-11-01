@@ -120,6 +120,19 @@ const mockPosts: MusicPost[] = [
 
 export const handlers = [
   // Get posts (Home feed) - wildcard for cross-origin requests
+  // Feed endpoint - posts from followed users + own posts
+  http.get("*/api/posts/feed", () => {
+    const currentUserId = "current-user";
+    // Filter posts to only show posts from users that "current-user" follows
+    // In mock, assume current-user follows user "user-2" and "user-3"
+    const followedUserIds = ["current-user", "user-2", "user-3"];
+    const feedPosts = mockPosts.filter((post) =>
+      followedUserIds.includes(post.userId)
+    );
+    return HttpResponse.json({ posts: feedPosts });
+  }),
+
+  // All posts endpoint (public)
   http.get("*/api/posts", () => {
     return HttpResponse.json({
       success: true,
@@ -511,5 +524,29 @@ export const handlers = [
       timestamp: new Date().toISOString(),
     };
     return HttpResponse.json(comment);
+  }),
+
+  // Follow user
+  http.post("/api/users/:userId/follow", ({ params }) => {
+    const { userId } = params as { userId: string };
+    return HttpResponse.json({
+      success: true,
+      data: {
+        isFollowing: true,
+        followersCount: 1251,
+      },
+    });
+  }),
+
+  // Unfollow user
+  http.delete("/api/users/:userId/follow", ({ params }) => {
+    const { userId } = params as { userId: string };
+    return HttpResponse.json({
+      success: true,
+      data: {
+        isFollowing: false,
+        followersCount: 1250,
+      },
+    });
   }),
 ];
