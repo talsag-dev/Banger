@@ -157,9 +157,16 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
   onPostUpdated,
   post,
 }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, musicIntegrations } = useAuth();
   const isEditMode = !!post;
   const [state, dispatch] = useReducer(newPostReducer, getInitialState(post));
+
+  // Check if any music service is connected
+  const hasMusicServiceConnected = useMemo(() => {
+    return Object.values(musicIntegrations).some(
+      (integration) => integration.isConnected && integration.hasValidToken
+    );
+  }, [musicIntegrations]);
 
   const {
     mutateAsync: createPost,
@@ -177,13 +184,18 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
 
   const debouncedSearchQuery = useDebounce(state.searchQuery, 300);
   const shouldSearch =
-    debouncedSearchQuery.length > 0 && state.selectedTrack === null;
+    debouncedSearchQuery.length > 0 &&
+    state.selectedTrack === null &&
+    hasMusicServiceConnected;
 
   const {
     data: searchResponse,
     isLoading: isSearching,
     error: searchError,
-  } = useSpotifySearch(debouncedSearchQuery, shouldSearch && isAuthenticated);
+  } = useSpotifySearch(
+    debouncedSearchQuery,
+    shouldSearch && isAuthenticated && hasMusicServiceConnected
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -367,7 +379,7 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
               value={state.selectedTrack}
               onChange={handleTrackSelect}
               by={(a, b) => a?.id === b?.id}
-              disabled={!isAuthenticated}
+              disabled={!isAuthenticated || !hasMusicServiceConnected}
             >
               <div className={styles.selectWrapper}>
                 <div className={styles.selectButton}>
@@ -376,11 +388,16 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
                   <ComboboxInput
                     ref={inputRef}
                     className={styles.searchInput}
-                    placeholder="Search for a track..."
+                    placeholder={
+                      hasMusicServiceConnected
+                        ? "Search for a track..."
+                        : "Connect to music provider to search"
+                    }
                     displayValue={(t: SpotifyTrack | null) =>
                       t?.name ?? state.searchQuery
                     }
                     onChange={(e) => {
+                      if (!hasMusicServiceConnected) return;
                       const value = e.target.value;
                       dispatch({ type: "SET_SEARCH_QUERY", payload: value });
 
@@ -393,6 +410,7 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
                       }
                     }}
                     autoFocus
+                    disabled={!hasMusicServiceConnected}
                   />
 
                   {state.selectedTrack && (
@@ -423,6 +441,17 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
                     </ComboboxButton>
                   )}
                 </div>
+
+                {/* Show message when authenticated but no music service is connected */}
+                {isAuthenticated && !hasMusicServiceConnected && (
+                  <div className={styles.musicServiceMessage}>
+                    <AlertCircle size={16} />
+                    <Text variant="caption" color="muted">
+                      To be able to search music, please connect to a music
+                      provider
+                    </Text>
+                  </div>
+                )}
 
                 <ComboboxOptions className={styles.selectOptions}>
                   {/* Loading */}
