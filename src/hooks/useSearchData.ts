@@ -1,8 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useSpotifySearch } from "./useSpotify";
-import { convertSpotifyTracksToSearchResults } from "../utils/spotifyUtils";
-import { http } from "@utils/http";
-import type { SpotifyAuthResponse } from "../types/spotify";
+import { useUserSearch } from "./useUserSearch";
 import type { SearchResult } from "../components/SearchDialog/types";
 import { useAuth } from "./useAuth";
 
@@ -34,30 +31,54 @@ export const useSearchData = (searchQuery: string) => {
     error: authError,
   } = useAuth();
 
-  // Search for tracks when query is provided
+  // Search for users when query is provided
   const {
     data: searchResponse,
     isLoading: isSearching,
     error: searchError,
-  } = useSpotifySearch(debouncedSearchQuery, shouldSearch && isAuthenticated);
+  } = useUserSearch(debouncedSearchQuery, shouldSearch && isAuthenticated);
 
-  // Convert Spotify results to SearchResult format
+  // Convert user results to SearchResult format
   const searchResults: SearchResult[] = useMemo(() => {
-    if (!searchResponse?.results?.tracks?.items) return [];
-    return convertSpotifyTracksToSearchResults(
-      searchResponse.results.tracks.items.slice(0, 10) // Limit to 10 results
-    );
+    if (!searchResponse?.users || !Array.isArray(searchResponse.users))
+      return [];
+
+    return searchResponse.users.map((user) => {
+      // Determine title (prefer username, then displayName, then email)
+      const title = user.username || user.displayName || user.email || "User";
+
+      // Determine subtitle
+      // If username exists: show displayName if different, or email
+      // If no username: show email if we're showing displayName as title
+      let subtitle: string | undefined;
+      if (user.username) {
+        subtitle =
+          user.displayName && user.displayName !== user.username
+            ? user.displayName
+            : user.email || undefined;
+      } else if (user.displayName && user.email) {
+        subtitle = user.email;
+      }
+
+      return {
+        id: user.id,
+        type: "user" as const,
+        title,
+        subtitle,
+        emoji: "👤",
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          displayName: user.displayName,
+          avatar: user.avatar,
+          bio: user.bio,
+        },
+      };
+    });
   }, [searchResponse]);
 
-  // Handle authentication redirect
-  const handleAuthRedirect = async () => {
-    try {
-      const authResponse = await http<SpotifyAuthResponse>(`/spotify/auth`);
-      window.location.href = authResponse.authUrl;
-    } catch (error) {
-      console.error("Failed to get Spotify auth URL:", error);
-    }
-  };
+  // No auth redirect needed for user search
 
   return {
     // Auth state
@@ -69,6 +90,5 @@ export const useSearchData = (searchQuery: string) => {
     isSearching,
     searchError,
     // Actions
-    onAuthRedirect: handleAuthRedirect,
   };
 };

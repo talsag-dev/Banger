@@ -85,7 +85,6 @@ export const Layout: React.FC<LayoutProps> = ({
     searchResults,
     isSearching,
     searchError: searchErrorRaw,
-    onAuthRedirect,
   } = useSearchData(searchQuery);
 
   // Convert string errors to Error objects for SearchDialog
@@ -153,7 +152,6 @@ export const Layout: React.FC<LayoutProps> = ({
         searchResults={searchResults}
         isSearching={isSearching}
         searchError={searchError}
-        onAuthRedirect={onAuthRedirect}
       />
 
       <NewPostModal

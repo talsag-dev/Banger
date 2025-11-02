@@ -48,7 +48,7 @@ const EmptyFeed: React.FC<EmptyFeedProps> = ({ onDiscoverPeople }) => {
 
 const FeedContent: React.FC<FeedContentProps> = ({
   posts,
-  onReaction,
+  onLike,
   onComment,
   onEdit,
   onDelete,
@@ -58,7 +58,7 @@ const FeedContent: React.FC<FeedContentProps> = ({
       <MusicPostCard
         key={post.id}
         post={post}
-        onReaction={onReaction}
+        onLike={onLike}
         onComment={onComment}
         onEdit={onEdit}
         onDelete={onDelete}
@@ -88,7 +88,7 @@ export const FeedContainer: React.FC<FeedContainerProps> = ({
   feed,
   isLoading,
   error,
-  onReaction,
+  onLike,
   onComment,
   onDiscoverPeople,
   onEdit,
@@ -127,7 +127,7 @@ export const FeedContainer: React.FC<FeedContainerProps> = ({
         feed && (
           <FeedContent
             posts={feed.posts}
-            onReaction={onReaction}
+            onLike={onLike}
             onComment={onComment}
             onEdit={onEdit}
             onDelete={onDelete}

@@ -10,7 +10,6 @@ export interface SearchDialogProps {
   searchResults: SearchResult[];
   isSearching: boolean;
   searchError: Error | null;
-  onAuthRedirect: () => void;
 }
 
 export interface SearchResult {
@@ -19,4 +18,12 @@ export interface SearchResult {
   title: string;
   subtitle?: string;
   emoji?: string;
+  user?: {
+    id: string;
+    username: string | null;
+    email: string | null;
+    displayName: string | null;
+    avatar: string | null;
+    bio: string | null;
+  };
 }

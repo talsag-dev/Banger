@@ -7,6 +7,7 @@ import { Card } from "@components/Card";
 import { PlatformIcon } from "@components/PlatformIcon";
 import { Loading } from "@components/Loading";
 import { getPlatformName } from "@utils/platformStyles";
+import { useToggleLike } from "@hooks/useToggleLike";
 import type { ProfileProps } from "./types";
 import styles from "./Profile.module.css";
 
@@ -29,8 +30,14 @@ export const ProfileBody = ({
     onFollowToggle();
   };
 
-  const handleReaction = (postId: string, reaction: string) => {
-    console.log("Adding reaction:", reaction, "to post:", postId);
+  const { mutateAsync: toggleLike } = useToggleLike();
+
+  const handleLike = async (postId: string) => {
+    try {
+      await toggleLike(postId);
+    } catch (error) {
+      console.error("Failed to toggle like:", error);
+    }
   };
 
   const handleComment = (postId: string, comment: string) => {
@@ -161,7 +168,7 @@ export const ProfileBody = ({
                 <MusicPostCard
                   key={post.id}
                   post={post}
-                  onReaction={handleReaction}
+                  onLike={handleLike}
                   onComment={handleComment}
                   onEdit={onEditPost}
                   onDelete={onDeletePost}
@@ -192,7 +199,7 @@ export const ProfileBody = ({
                 <MusicPostCard
                   key={post.id}
                   post={post}
-                  onReaction={handleReaction}
+                  onLike={handleLike}
                   onComment={handleComment}
                   onEdit={onEditPost}
                   onDelete={onDeletePost}

@@ -5,6 +5,7 @@ import { DeletePostModal } from "@components/DeletePostModal";
 import { useReducer } from "react";
 import { useFeed } from "@hooks/useFeed";
 import { useDeletePost } from "@hooks/useDeletePost";
+import { useToggleLike } from "@hooks/useToggleLike";
 
 interface FeedContainerState {
   isNewPostOpen: boolean;
@@ -64,9 +65,14 @@ export const Home: React.FC = () => {
   ] = useReducer(feedContainerReducer, initialState);
   const { data: feed, isLoading, error } = useFeed();
   const { mutateAsync: deletePost, isPending: isDeleting } = useDeletePost();
+  const { mutateAsync: toggleLike } = useToggleLike();
 
-  const handleReaction = (postId: string, reaction: string) => {
-    console.error("Failed to add reaction:", { postId, reaction });
+  const handleLike = async (postId: string) => {
+    try {
+      await toggleLike(postId);
+    } catch (error) {
+      console.error("Failed to toggle like:", error);
+    }
   };
 
   const handleComment = (postId: string, comment: string) => {
@@ -106,7 +112,7 @@ export const Home: React.FC = () => {
         feed={feed}
         isLoading={isLoading}
         error={error}
-        onReaction={handleReaction}
+        onLike={handleLike}
         onComment={handleComment}
         onEdit={handleEdit}
         onDelete={handleDelete}

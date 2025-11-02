@@ -1,19 +1,18 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Combobox,
   ComboboxInput,
   ComboboxOptions,
   ComboboxOption,
 } from "@headlessui/react";
-import { Search, X, Loader2, Music, AlertCircle } from "lucide-react";
+import { Search, X, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "../Button";
 import { Modal } from "../Modal";
 import { Text } from "../Text";
 import type { SearchDialogProps } from "./types";
-import { getRecentSearches, getTrendingResults } from "./utils";
 import styles from "./SearchDialog.module.css";
 
-export const SearchDialog: React.FC<SearchDialogProps> = ({
+export const SearchDialog = ({
   isOpen,
   searchQuery,
   onClose,
@@ -24,13 +23,18 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
   searchResults,
   isSearching,
   searchError,
-  onAuthRedirect,
-}) => {
+}: SearchDialogProps) => {
+  const navigate = useNavigate();
   const shouldSearch = searchQuery.length > 0;
-  
-  // Get fallback data
-  const recentSearches = getRecentSearches();
-  const trendingResults = getTrendingResults();
+
+  const handleUserSelect = (value: string | null) => {
+    if (value && value.startsWith("/profile/")) {
+      navigate(value);
+      onClose();
+    } else {
+      onSearchQueryChange(value || "");
+    }
+  };
 
   const renderSearchContent = () => {
     // Show loading state while checking auth
@@ -50,13 +54,9 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
       return (
         <div className={styles.searchSection}>
           <div className="flex flex-col items-center justify-center py-8 space-y-4">
-            <Music size={32} className="text-gray-400" />
             <Text color="muted" className="text-center">
-              Connect your Spotify account to search for music
+              Please sign in to search for users
             </Text>
-            <Button onClick={onAuthRedirect} variant="primary" size="sm">
-              Connect Spotify
-            </Button>
           </div>
         </div>
       );
@@ -69,7 +69,7 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
           <div className={styles.searchSection}>
             <div className="flex items-center justify-center py-4">
               <Loader2 className="animate-spin mr-2" size={20} />
-              <Text color="muted">Searching Spotify...</Text>
+              <Text color="muted">Searching users...</Text>
             </div>
           </div>
         );
@@ -83,15 +83,6 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
               <Text color="muted" className="text-center">
                 Failed to search: {searchError.message}
               </Text>
-              {searchError.message.includes("Authentication") && (
-                <Button
-                  onClick={onAuthRedirect}
-                  variant="primary"
-                  size="sm"
-                >
-                  Reconnect Spotify
-                </Button>
-              )}
             </div>
           </div>
         );
@@ -101,9 +92,7 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
         return (
           <div className={styles.searchSection}>
             <div className="flex flex-col items-center justify-center py-8">
-              <Text color="muted">
-                No results found for "{searchQuery}"
-              </Text>
+              <Text color="muted">No results found for "{searchQuery}"</Text>
             </div>
           </div>
         );
@@ -114,23 +103,55 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
           <Text variant="overline" color="muted" as="h4">
             Search Results
           </Text>
-          {searchResults.map((result) => (
-            <ComboboxOption
-              key={result.id}
-              value={result.title}
-              className={styles.searchOption}
-            >
-              {result.emoji} {result.title}
-              {result.subtitle && ` - ${result.subtitle}`}
-            </ComboboxOption>
-          ))}
+          <div className={styles.searchResultsList}>
+            {searchResults.map((result) => (
+              <ComboboxOption
+                key={result.id}
+                value={
+                  result.user ? `/profile/${result.user.id}` : result.title
+                }
+                className={styles.searchOption}
+              >
+                {result.user ? (
+                  <div className={styles.userResult}>
+                    <img
+                      src={
+                        result.user.avatar ||
+                        `https://api.dicebear.com/7.x/avataaars/svg?seed=${result.user.id}`
+                      }
+                      alt={result.title}
+                      className={styles.userAvatar}
+                    />
+                    <div className={styles.userInfo}>
+                      <div className={styles.userName}>{result.title}</div>
+                      {result.subtitle && (
+                        <div className={styles.userSubtitle}>
+                          {result.subtitle}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {result.emoji} {result.title}
+                    {result.subtitle && ` - ${result.subtitle}`}
+                  </>
+                )}
+              </ComboboxOption>
+            ))}
+          </div>
         </div>
       );
     }
 
-    // Show default content (recent searches and trending)
+    // Show default content - for now, show helpful message since we only search users
+    // TODO: When feelings/playlists search is implemented, uncomment the sections below
     return (
-      <>
+      <div className={styles.searchSection}>
+        <Text color="muted" className={styles.emptyState}>
+          Search for users by username, email, or display name
+        </Text>
+        {/* TODO: Re-enable when feelings/playlists search is implemented
         <div className={styles.searchSection}>
           <Text variant="overline" color="muted" as="h4">
             Recent Searches
@@ -160,36 +181,43 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
             </ComboboxOption>
           ))}
         </div>
-      </>
+        */}
+      </div>
     );
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} showCloseButton={false} size="lg">
-      <Combobox
-        value={searchQuery}
-        onChange={(value) => onSearchQueryChange(value || "")}
-      >
-        <div className={styles.searchInputContainer}>
-          <Search size={20} className={styles.searchInputIcon} />
-          <ComboboxInput
-            className={styles.searchComboboxInput}
-            placeholder="Search for music, artists, friends..."
-            onChange={(event) => onSearchQueryChange(event.target.value)}
-          />
-          <Button
-            onClick={onClose}
-            variant="ghost"
-            size="sm"
-            leftIcon={<X size={20} />}
-            className={styles.searchCloseBtn}
-          />
-        </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      showCloseButton={false}
+      size="md"
+      className={styles.searchModal}
+    >
+      <div className={styles.searchDialogWrapper}>
+        <Combobox value={searchQuery} onChange={handleUserSelect}>
+          <div className={styles.searchInputContainer}>
+            <Search size={20} className={styles.searchInputIcon} />
+            <ComboboxInput
+              className={styles.searchComboboxInput}
+              placeholder="Search for users by username, email, or name..."
+              onChange={(event) => onSearchQueryChange(event.target.value)}
+              autoFocus
+            />
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              size="sm"
+              leftIcon={<X size={20} />}
+              className={styles.searchCloseBtn}
+            />
+          </div>
 
-        <ComboboxOptions className={styles.searchResults}>
-          {renderSearchContent()}
-        </ComboboxOptions>
-      </Combobox>
+          <ComboboxOptions className={styles.searchResults}>
+            {renderSearchContent()}
+          </ComboboxOptions>
+        </Combobox>
+      </div>
     </Modal>
   );
 };

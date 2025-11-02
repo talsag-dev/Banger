@@ -1,4 +1,5 @@
 import { useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import {
   MessageCircle,
@@ -8,15 +9,12 @@ import {
   MoreHorizontal,
   Edit,
   Trash2,
+  Heart,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { Button } from "../Button";
 import { Card } from "../Card";
-import {
-  REACTION_MAP,
-  AVAILABLE_REACTIONS,
-  getReactionEmoji,
-} from "../../utils/reactions";
+import { Text } from "../Text";
 import type { MusicPostCardProps } from "./types";
 import { initialState, musicPostCardReducer } from "./reducer";
 import { formatDuration, getTimeAgo } from "./utils";
@@ -27,17 +25,23 @@ import { useAuth } from "../../hooks/useAuth";
 
 export const MusicPostCard: React.FC<MusicPostCardProps> = ({
   post,
-  onReaction,
+  onLike,
   onComment,
   onEdit,
   onDelete,
 }) => {
+  const navigate = useNavigate();
   const [{ isCommentsOpen }, dispatch] = useReducer(
     musicPostCardReducer,
     initialState
   );
   const { user } = useAuth();
   const isOwnPost = user?.id && post.userId;
+
+  const handleUsernameClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(`/profile/${post.userId}`);
+  };
 
   const {
     userId,
@@ -52,6 +56,9 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
     id,
   } = post;
 
+  // Check if current user has liked this post
+  const isLiked = reactions.some((reaction) => reaction.userId === user?.id);
+
   return (
     <Card variant="noImage" className={styles.musicPostCard}>
       <div className={styles.postHeader}>
@@ -61,8 +68,15 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
             alt="User avatar"
             className={styles.userAvatar}
           />
-          <div>
-            <h4 className={styles.username}>@{username || userId}</h4>
+          <div className={styles.usernameContainer}>
+            <Text
+              as="button"
+              onClick={handleUsernameClick}
+              className={styles.username}
+              type="button"
+            >
+              @{username || userId}
+            </Text>
             <span className={styles.timestamp}>{getTimeAgo(timestamp)}</span>
           </div>
         </div>
@@ -135,38 +149,25 @@ export const MusicPostCard: React.FC<MusicPostCardProps> = ({
       {caption && <div className={styles.postCaption}>{caption}</div>}
 
       <div className={styles.postActions}>
-        {/* Reactions Menu using Headless UI */}
-        <Menu as="div" className={styles.relative}>
-          <MenuButton className={styles.reactionsMenuBtn}>
-            <span className={styles.reactionTrigger}>
-              {reactions.length > 0
-                ? getReactionEmoji(reactions[0].type)
-                : "❤️"}
-            </span>
-            {reactions.length > 0 && (
-              <span className={styles.reactionCount}>{reactions.length}</span>
-            )}
-          </MenuButton>
-          <MenuItems className={styles.reactionsMenu}>
-            {AVAILABLE_REACTIONS.map((reactionType) => (
-              <MenuItem key={reactionType}>
-                {({ focus }) => (
-                  <Button
-                    onClick={() => onReaction(id, reactionType)}
-                    variant="ghost"
-                    size="sm"
-                    className={clsx(
-                      styles.reactionMenuItem,
-                      focus && styles.reactionMenuItemActive
-                    )}
-                  >
-                    {REACTION_MAP[reactionType]}
-                  </Button>
-                )}
-              </MenuItem>
-            ))}
-          </MenuItems>
-        </Menu>
+        {/* Like Button */}
+        <button
+          onClick={() => onLike?.(id)}
+          className={clsx(
+            styles.likeButton,
+            isLiked && styles.likeButtonActive
+          )}
+          type="button"
+          aria-label={isLiked ? "Unlike" : "Like"}
+        >
+          <Heart
+            size={18}
+            className={styles.likeIcon}
+            fill={isLiked ? "currentColor" : "none"}
+          />
+          {reactions.length > 0 && (
+            <span className={styles.likeCount}>{reactions.length}</span>
+          )}
+        </button>
 
         <div className={styles.actionButtons}>
           <Button

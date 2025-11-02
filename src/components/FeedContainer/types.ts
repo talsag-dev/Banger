@@ -4,7 +4,7 @@ export interface FeedContainerProps {
   feed?: Feed;
   isLoading: boolean;
   error?: Error | null;
-  onReaction: (postId: string, type: string) => void;
+  onLike?: (postId: string) => void;
   onComment: (postId: string, content: string) => void;
   onDiscoverPeople?: () => void;
   onEdit?: (post: MusicPost) => void;
@@ -17,7 +17,7 @@ export interface EmptyFeedProps {
 
 export interface FeedContentProps {
   posts: MusicPost[];
-  onReaction: (postId: string, type: string) => void;
+  onLike?: (postId: string) => void;
   onComment: (postId: string, content: string) => void;
   onEdit?: (post: MusicPost) => void;
   onDelete?: (postId: string) => void;

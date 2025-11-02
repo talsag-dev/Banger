@@ -1,25 +1,4 @@
 import type { SpotifyTrack } from "../types/spotify";
-import type { SearchResult } from "../components/SearchDialog/types";
-
-export const convertSpotifyTrackToSearchResult = (
-  track: SpotifyTrack
-): SearchResult => {
-  const artistNames = track.artists.map((artist) => artist.name).join(", ");
-
-  return {
-    id: track.id,
-    type: "song",
-    title: track.name,
-    subtitle: `${artistNames} • ${track.album.name}`,
-    emoji: "🎵", // You can customize this based on genre or use album art
-  };
-};
-
-export const convertSpotifyTracksToSearchResults = (
-  tracks: SpotifyTrack[]
-): SearchResult[] => {
-  return tracks.map(convertSpotifyTrackToSearchResult);
-};
 
 export const formatDuration = (durationMs: number): string => {
   const minutes = Math.floor(durationMs / 60000);
