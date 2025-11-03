@@ -16,6 +16,7 @@ export interface ProfileProps {
   onFollowToggle: () => void | Promise<void>;
   onEditPost?: (post: MusicPost) => void;
   onDeletePost?: (postId: string) => void;
+  onPlaylistClick?: (playlist: Playlist) => void;
 }
 
 export interface ProfileState {
@@ -24,6 +25,8 @@ export interface ProfileState {
   postToEdit: MusicPost | null;
   postToDelete: MusicPost | null;
   isDeleteModalOpen: boolean;
+  selectedPlaylist: Playlist | null;
+  isPlaylistModalOpen: boolean;
 }
 
 export type ProfileAction =
@@ -34,4 +37,6 @@ export type ProfileAction =
   | { type: "CLEAR_POST_TO_EDIT" }
   | { type: "OPEN_DELETE_MODAL"; payload: MusicPost }
   | { type: "CLOSE_DELETE_MODAL" }
-  | { type: "CLEAR_POST_TO_DELETE" };
+  | { type: "CLEAR_POST_TO_DELETE" }
+  | { type: "OPEN_PLAYLIST_MODAL"; payload: Playlist }
+  | { type: "CLOSE_PLAYLIST_MODAL" };

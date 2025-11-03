@@ -25,6 +25,7 @@ export const ProfileBody = ({
   onFollowToggle,
   onEditPost,
   onDeletePost,
+  onPlaylistClick,
 }: ProfileProps) => {
   const handleFollowToggle = () => {
     onFollowToggle();
@@ -232,6 +233,8 @@ export const ProfileBody = ({
                   image={playlist.image}
                   imageAlt={playlist.name}
                   imagePlaceholder={<Music size={32} />}
+                  onClick={() => onPlaylistClick?.(playlist)}
+                  className={styles.playlistCard}
                 >
                   <Text weight="semibold" size="sm">
                     {playlist.name}

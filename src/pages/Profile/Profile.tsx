@@ -2,12 +2,13 @@ import { useReducer, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { NewPostModal } from "@components/NewPostModal";
 import { DeletePostModal } from "@components/DeletePostModal";
+import { PlaylistDetailModal } from "@components/PlaylistDetailModal";
 import { useAuth } from "@hooks/useAuth";
 import { useProfileData } from "@hooks/useProfileData";
 import { useDeletePost } from "@hooks/useDeletePost";
 import { useToggleFollow } from "@hooks/useFollowUser";
 import type { ProfileState, ProfileAction, ProfileTab } from "./types";
-import type { MusicPost } from "@types";
+import type { MusicPost, Playlist } from "@types";
 import { getInitialTabFromUrl } from "@utils/getInitialTab";
 import { ProfileBody } from "./ProfileBody";
 
@@ -36,6 +37,18 @@ const profileReducer = (
       return { ...state, isDeleteModalOpen: false };
     case "CLEAR_POST_TO_DELETE":
       return { ...state, postToDelete: null };
+    case "OPEN_PLAYLIST_MODAL":
+      return {
+        ...state,
+        selectedPlaylist: action.payload,
+        isPlaylistModalOpen: true,
+      };
+    case "CLOSE_PLAYLIST_MODAL":
+      return {
+        ...state,
+        isPlaylistModalOpen: false,
+        selectedPlaylist: null,
+      };
     default:
       return state;
   }
@@ -51,7 +64,15 @@ export const Profile = () => {
   const initialTab = getInitialTabFromUrl(searchParams);
 
   const [
-    { activeTab, isNewPostOpen, postToEdit, postToDelete, isDeleteModalOpen },
+    {
+      activeTab,
+      isNewPostOpen,
+      postToEdit,
+      postToDelete,
+      isDeleteModalOpen,
+      selectedPlaylist,
+      isPlaylistModalOpen,
+    },
     dispatch,
   ] = useReducer(profileReducer, {
     activeTab: initialTab,
@@ -59,6 +80,8 @@ export const Profile = () => {
     postToEdit: null,
     postToDelete: null,
     isDeleteModalOpen: false,
+    selectedPlaylist: null,
+    isPlaylistModalOpen: false,
   });
 
   // Sync state with URL param when URL changes (browser back/forward)
@@ -136,6 +159,10 @@ export const Profile = () => {
     }
   };
 
+  const handlePlaylistClick = (playlist: Playlist) => {
+    dispatch({ type: "OPEN_PLAYLIST_MODAL", payload: playlist });
+  };
+
   return (
     <>
       <ProfileBody
@@ -152,6 +179,7 @@ export const Profile = () => {
         onFollowToggle={handleFollowToggle}
         onEditPost={handleEditPost}
         onDeletePost={handleDeletePost}
+        onPlaylistClick={handlePlaylistClick}
       />
       <NewPostModal
         isOpen={isNewPostOpen}
@@ -176,6 +204,15 @@ export const Profile = () => {
         onConfirm={handleConfirmDelete}
         postId={postToDelete?.id ?? null}
         isDeleting={isDeleting}
+      />
+
+      <PlaylistDetailModal
+        isOpen={isPlaylistModalOpen}
+        onClose={() => {
+          dispatch({ type: "CLOSE_PLAYLIST_MODAL" });
+        }}
+        playlist={selectedPlaylist}
+        userId={userId}
       />
     </>
   );

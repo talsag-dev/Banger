@@ -1,4 +1,5 @@
 import type { MusicProvider } from "../index";
+import type { Track } from "../music";
 
 export interface Playlist {
   id: string;
@@ -11,3 +12,7 @@ export interface Playlist {
   externalUrl?: string;
 }
 
+export interface PlaylistTracksResponse {
+  playlist: Playlist;
+  tracks: Track[];
+}

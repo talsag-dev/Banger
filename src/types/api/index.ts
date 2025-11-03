@@ -1,2 +1,2 @@
-export type { Playlist } from "./playlist";
+export type { Playlist, PlaylistTracksResponse } from "./playlist";
 
