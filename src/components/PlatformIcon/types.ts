@@ -1,5 +1,5 @@
 export interface PlatformIconProps {
-  platform: string;
+  platform: "spotify" | "apple-music" | "youtube-music" | "soundcloud";
   size?: number;
   className?: string;
   title?: string;

@@ -95,7 +95,7 @@ export const ProfileBody = ({
             <div className={styles.connectedServices}>
               {userProfile.spotifyConnected && (
                 <div className={styles.serviceTag}>
-                  <Music size={16} />
+                  <PlatformIcon platform="spotify" size={16} />
                   <Text size="sm">Spotify</Text>
                 </div>
               )}
@@ -103,6 +103,12 @@ export const ProfileBody = ({
                 <div className={styles.serviceTag}>
                   <Music size={16} />
                   <Text size="sm">Apple Music</Text>
+                </div>
+              )}
+              {userProfile.soundcloudConnected && (
+                <div className={styles.serviceTag}>
+                  <PlatformIcon platform="soundcloud" size={16} />
+                  <Text size="sm">SoundCloud</Text>
                 </div>
               )}
             </div>

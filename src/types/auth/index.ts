@@ -53,6 +53,7 @@ export interface UserProfile {
   isFollowing?: boolean;
   spotifyConnected: boolean;
   appleConnected: boolean;
+  soundcloudConnected: boolean;
   joinedDate: string;
   connectedPlatforms: Array<{
     type: MusicProvider;
