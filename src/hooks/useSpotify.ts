@@ -8,17 +8,17 @@ import type {
   SpotifyAuthResponse,
 } from "../types/spotify";
 
-// Search hook with debouncing
+// Unified search hook with debouncing - searches across all connected providers
 export const useSpotifySearch = (
   query: string,
   enabled: boolean = true,
   type: "track" | "artist" | "album" = "track"
 ) => {
   return useQuery({
-    queryKey: ["spotify", "search", query, type],
+    queryKey: ["search", query, type],
     queryFn: async (): Promise<SpotifySearchResponse> => {
       const params = new URLSearchParams({ q: query, type, limit: String(10) });
-      return http<SpotifySearchResponse>(`/spotify/search?${params}`);
+      return http<SpotifySearchResponse>(`/search?${params}`);
     },
     enabled: enabled && query.length > 0,
     staleTime: 5 * 60 * 1000, // 5 minutes

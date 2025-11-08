@@ -9,10 +9,11 @@ export interface SpotifyTrack {
     release_date: string;
   };
   duration_ms: number;
-  external_urls: { spotify: string };
+  external_urls: { spotify: string; soundcloud?: string };
   preview_url: string | null;
-  popularity: number;
-  explicit: boolean;
+  popularity?: number;
+  explicit?: boolean;
+  provider?: 'spotify' | 'soundcloud'; // Indicates which provider the track comes from
 }
 
 export interface SpotifySearchResponse {

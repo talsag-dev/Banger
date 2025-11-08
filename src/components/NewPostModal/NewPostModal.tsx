@@ -20,6 +20,7 @@ import {
 import { Button } from "../Button";
 import { Modal } from "../Modal";
 import { Text } from "../Text";
+import { PlatformIcon } from "../PlatformIcon";
 import { useSpotifySearch } from "../../hooks/useSpotify";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useCreatePost } from "../../hooks/useCreatePost";
@@ -282,6 +283,12 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
         .join(", ");
       const albumImage = getAlbumImage(state.selectedTrack, "large");
 
+      // Get external URL - prefer provider-specific URL, fallback to spotify
+      const externalUrl =
+        (state.selectedTrack.provider === "soundcloud"
+          ? state.selectedTrack.external_urls.soundcloud
+          : state.selectedTrack.external_urls.spotify) || undefined;
+
       try {
         await createPost({
           track_id: state.selectedTrack.id,
@@ -290,8 +297,7 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
           album_name: state.selectedTrack.album.name,
           track_image: albumImage || undefined,
           track_preview_url: state.selectedTrack.preview_url || undefined,
-          track_external_url:
-            state.selectedTrack.external_urls.spotify || undefined,
+          track_external_url: externalUrl,
           track_duration: state.selectedTrack.duration_ms
             ? Math.floor(state.selectedTrack.duration_ms / 1000)
             : undefined, // Convert milliseconds to seconds
@@ -521,9 +527,28 @@ export const NewPostModal: React.FC<NewPostModalProps> = ({
                               )}
 
                               <div className={styles.trackOptionInfo}>
-                                <Text variant="body" weight="medium" as="div">
-                                  {track.name}
-                                </Text>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "8px",
+                                  }}
+                                >
+                                  <Text variant="body" weight="medium" as="div">
+                                    {track.name}
+                                  </Text>
+                                  {track.provider && (
+                                    <PlatformIcon
+                                      platform={track.provider}
+                                      size={14}
+                                      title={
+                                        track.provider === "spotify"
+                                          ? "Spotify"
+                                          : "SoundCloud"
+                                      }
+                                    />
+                                  )}
+                                </div>
                                 <Text variant="caption" color="muted" as="div">
                                   {trackArtistNames}
                                 </Text>
