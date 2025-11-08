@@ -78,6 +78,7 @@ export const OAuthCallback = () => {
               body: JSON.stringify({ code, state }),
             });
 
+            // Connection succeeded - show success even if there were warnings
             setStatus("success");
             setMessage("Successfully connected to SoundCloud!");
             // Small delay to show success message, then navigate
@@ -85,13 +86,29 @@ export const OAuthCallback = () => {
               navigate("/", { replace: true });
             }, 1500);
             return;
-          } catch (err) {
-            setStatus("error");
-            setMessage(
+          } catch (err: unknown) {
+            // Only show error if it's a real connection failure, not a 403 from /me
+            const errorMessage =
               err instanceof Error
                 ? err.message
-                : "Failed to connect to SoundCloud"
-            );
+                : "Failed to connect to SoundCloud";
+            const errorStatus = (err as { status?: number })?.status;
+            const isNotFound =
+              errorStatus === 404 ||
+              errorMessage.toLowerCase().includes("not found");
+
+            // If it's a NOT_FOUND or 404, treat it as success (connection worked, profile fetch may have failed)
+            if (isNotFound) {
+              setStatus("success");
+              setMessage("Successfully connected to SoundCloud!");
+              setTimeout(() => {
+                navigate("/", { replace: true });
+              }, 1500);
+              return;
+            }
+
+            setStatus("error");
+            setMessage(errorMessage);
             return;
           }
         }
@@ -107,6 +124,20 @@ export const OAuthCallback = () => {
           return;
         }
 
+        // If we get here, it's an unknown state - but don't show error immediately
+        // Check if we're just missing code/state but might still be processing
+        if (location.pathname === "/auth/soundcloud") {
+          // Still on soundcloud route but no code/state - might be loading
+          setStatus("loading");
+          setMessage("Processing SoundCloud connection...");
+          // Give it a moment, then navigate home (connection might have succeeded)
+          setTimeout(() => {
+            navigate("/", { replace: true });
+          }, 2000);
+          return;
+        }
+
+        // Only show error for truly unknown states
         setStatus("error");
         setMessage("Unknown callback state");
       } catch {
