@@ -17,31 +17,49 @@ export const OAuthCallback = () => {
   const navigate = useNavigate();
   const invalidateSpotify = useInvalidateSpotifyQueries();
 
+  // Log immediately when component renders - this will help us see if component is mounting
+  console.log("🔵 OAuthCallback RENDERED", {
+    pathname: location.pathname,
+    search: location.search.substring(0, 100), // First 100 chars to avoid huge logs
+    fullUrl: window.location.href.substring(0, 200),
+    timestamp: new Date().toISOString(),
+  });
+
   const handledRef = useRef(false);
   useEffect(() => {
-    if (handledRef.current) return;
+    console.log("🟢 OAuthCallback useEffect triggered", {
+      alreadyHandled: handledRef.current,
+      pathname: location.pathname,
+    });
+
+    if (handledRef.current) {
+      console.log("⚠️ Already handled, skipping");
+      return;
+    }
     handledRef.current = true;
+
     const handleCallback = async () => {
       try {
         // Debug logging
-        console.log(
-          "OAuthCallback - pathname:",
-          location.pathname,
-          "search:",
-          location.search
-        );
+        console.log("🟡 OAuthCallback handleCallback START", {
+          pathname: location.pathname,
+          searchLength: location.search.length,
+        });
 
         const urlParams = new URLSearchParams(location.search);
         const errParam = urlParams.get("error");
         const code = urlParams.get("code");
         const state = urlParams.get("state");
 
-        console.log(
-          "OAuthCallback - code:",
-          code ? "present" : "missing",
-          "state:",
-          state ? "present" : "missing"
-        );
+        console.log("🟡 OAuthCallback params extracted", {
+          hasError: !!errParam,
+          hasCode: !!code,
+          hasState: !!state,
+          codeLength: code?.length || 0,
+          stateLength: state?.length || 0,
+          codePreview: code?.substring(0, 50) || "none",
+          statePreview: state?.substring(0, 20) || "none",
+        });
 
         if (location.pathname === "/auth/error" || errParam) {
           setStatus("error");
@@ -84,14 +102,22 @@ export const OAuthCallback = () => {
 
         // SoundCloud (we use /auth/soundcloud)
         if (location.pathname === "/auth/soundcloud" && code && state) {
+          console.log("🔵 SoundCloud callback detected with code and state");
           setStatus("loading");
           setMessage("Connecting to SoundCloud...");
 
           try {
-            await http(`/auth/integrations/soundcloud/connect`, {
-              method: "POST",
-              body: JSON.stringify({ code, state }),
-            });
+            console.log(
+              "🟡 Making POST to /auth/integrations/soundcloud/connect"
+            );
+            const response = await http(
+              `/auth/integrations/soundcloud/connect`,
+              {
+                method: "POST",
+                body: JSON.stringify({ code, state }),
+              }
+            );
+            console.log("✅ SoundCloud connection successful", response);
 
             // Connection succeeded - show success even if there were warnings
             setStatus("success");
@@ -110,10 +136,11 @@ export const OAuthCallback = () => {
             const errorObj = err as { status?: number; error?: string };
 
             // Log the error for debugging
-            console.error("SoundCloud connection error:", {
+            console.error("❌ SoundCloud connection error:", {
               status: errorStatus,
               message: errorMessage,
               error: errorObj.error,
+              fullError: err,
             });
 
             // Handle different error cases
