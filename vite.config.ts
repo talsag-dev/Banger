@@ -18,12 +18,21 @@ export default defineConfig({
     },
   },
   server: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, "certs/localhost-key.pem")),
-      cert: fs.readFileSync(
-        path.resolve(__dirname, "certs/localhost-cert.pem")
-      ),
-    },
+    // Only use HTTPS in development if certs exist
+    ...(process.env.NODE_ENV === "development" &&
+    fs.existsSync(path.resolve(__dirname, "certs/localhost-key.pem")) &&
+    fs.existsSync(path.resolve(__dirname, "certs/localhost-cert.pem"))
+      ? {
+          https: {
+            key: fs.readFileSync(
+              path.resolve(__dirname, "certs/localhost-key.pem")
+            ),
+            cert: fs.readFileSync(
+              path.resolve(__dirname, "certs/localhost-cert.pem")
+            ),
+          },
+        }
+      : {}),
     port: 5173,
   },
 });
