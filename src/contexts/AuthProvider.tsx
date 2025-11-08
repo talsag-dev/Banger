@@ -216,10 +216,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     ) => {
       try {
         setError(null);
-        await http(`/auth/signup`, {
-          method: "POST",
-          body: { email, password, displayName, username },
-        });
+        const response = await http<{ user: AuthUser; token: string }>(
+          `/auth/signup`,
+          {
+            method: "POST",
+            body: { email, password, displayName, username },
+          }
+        );
+
+        // Store token in localStorage as fallback for cross-domain cookie issues
+        if (response.token) {
+          localStorage.setItem("auth_token", response.token);
+        }
+
         // Refresh profile after successful signup
         await refreshProfile();
       } catch (err) {
@@ -234,14 +243,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     async (email: string, password: string) => {
       try {
         setError(null);
-        await http(`/auth/login`, {
-          method: "POST",
-          body: { email, password },
-        });
+        const response = await http<{ user: AuthUser; token: string }>(
+          `/auth/login`,
+          {
+            method: "POST",
+            body: { email, password },
+          }
+        );
 
-        // Small delay to ensure cookie is set by browser before making next request
-        // This is especially important for cross-origin cookies
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        // Store token in localStorage as fallback for cross-domain cookie issues
+        if (response.token) {
+          localStorage.setItem("auth_token", response.token);
+        }
 
         // Refresh profile after successful login
         await refreshProfile();
@@ -257,9 +270,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setError(null);
       await http(`/auth/logout`, { method: "POST" });
+      // Clear token from localStorage
+      localStorage.removeItem("auth_token");
       setUser(null);
       setMusicIntegrations(initialMusicIntegrations);
     } catch (err) {
+      // Clear token even if logout request fails
+      localStorage.removeItem("auth_token");
       setError(err instanceof Error ? err.message : "Logout failed");
     }
   }, []);

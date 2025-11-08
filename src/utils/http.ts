@@ -17,20 +17,16 @@ export async function http<T>(
 ): Promise<T> {
   const url = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;
 
+  // Get token from localStorage as fallback for cross-domain cookie issues
+  const token = localStorage.getItem("auth_token");
+
   const headers = {
     "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
     ...(options.headers || {}),
   };
 
   const body = options.body ? JSON.stringify(options.body) : null;
-
-  // Debug logging for cookie issues (only in development or when explicitly enabled)
-  if (import.meta.env.DEV || import.meta.env.VITE_DEBUG === "true") {
-    console.log(`🌐 Making request to: ${url}`, {
-      credentials: "include",
-      method: options.method || "GET",
-    });
-  }
 
   const res = await fetch(url, {
     credentials: "include",
@@ -39,11 +35,14 @@ export async function http<T>(
     body,
   });
 
-  // Log if cookies might be missing (401 on auth endpoints)
-  if (!res.ok && res.status === 401 && endpoint.includes("/auth/")) {
-    console.warn(
-      "⚠️ 401 Unauthorized - Cookie might not be sent. Check browser cookie settings and third-party cookie blocking."
-    );
+  // If 401, clear invalid token from localStorage
+  if (!res.ok && res.status === 401) {
+    localStorage.removeItem("auth_token");
+    if (endpoint.includes("/auth/")) {
+      console.warn(
+        "⚠️ 401 Unauthorized - Authentication failed. Token cleared."
+      );
+    }
   }
 
   const isJson = res.headers.get("content-type")?.includes("application/json");
