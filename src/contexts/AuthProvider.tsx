@@ -65,8 +65,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const data = await http<{ user: AuthUser }>(`/auth/me`);
         userData = data.user;
-      } catch (err: any) {
-        if (err.status === 401) {
+      } catch (err) {
+        if (
+          err &&
+          typeof err === "object" &&
+          "status" in err &&
+          err.status === 401
+        ) {
           userData = null;
         } else {
           throw err;
@@ -233,6 +238,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           method: "POST",
           body: { email, password },
         });
+
+        // Small delay to ensure cookie is set by browser before making next request
+        // This is especially important for cross-origin cookies
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
         // Refresh profile after successful login
         await refreshProfile();
       } catch (err) {
