@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useInvalidateSpotifyQueries } from "@hooks/useSpotify";
 import { Text } from "@components/Text";
@@ -14,6 +14,7 @@ export const OAuthCallback = () => {
   const [message, setMessage] = useState("");
   const { refreshProfile } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const invalidateSpotify = useInvalidateSpotifyQueries();
 
   const handledRef = useRef(false);
@@ -48,7 +49,12 @@ export const OAuthCallback = () => {
             setMessage("Successfully connected to Spotify!");
 
             invalidateSpotify();
-            window.location.replace("/");
+            // Refresh profile to get updated integration data
+            await refreshProfile();
+            // Small delay to show success message, then navigate
+            setTimeout(() => {
+              navigate("/", { replace: true });
+            }, 1500);
             return;
           } catch (err) {
             setStatus("error");
@@ -74,8 +80,12 @@ export const OAuthCallback = () => {
 
             setStatus("success");
             setMessage("Successfully connected to SoundCloud!");
-            // No cache to invalidate yet; redirect home
-            window.location.replace("/");
+            // Refresh profile to get updated integration data
+            await refreshProfile();
+            // Small delay to show success message, then navigate
+            setTimeout(() => {
+              navigate("/", { replace: true });
+            }, 1500);
             return;
           } catch (err) {
             setStatus("error");
@@ -91,7 +101,12 @@ export const OAuthCallback = () => {
         if (location.pathname === "/auth/success") {
           setStatus("success");
           setMessage("Authentication success");
-          window.location.replace("/");
+          // Refresh profile to get updated integration data
+          await refreshProfile();
+          // Small delay to show success message, then navigate
+          setTimeout(() => {
+            navigate("/", { replace: true });
+          }, 1500);
           return;
         }
 
@@ -104,7 +119,7 @@ export const OAuthCallback = () => {
     };
 
     handleCallback();
-  }, [refreshProfile, location, invalidateSpotify]);
+  }, [refreshProfile, location, invalidateSpotify, navigate]);
 
   const getErrorMessage = (error: string | null): string => {
     switch (error) {
@@ -177,7 +192,10 @@ export const OAuthCallback = () => {
               {message}
             </Text>
             <div className={styles.returnButton}>
-              <Button onClick={() => (window.location.href = "/")} size="md">
+              <Button
+                onClick={() => navigate("/", { replace: true })}
+                size="md"
+              >
                 Return to App
               </Button>
             </div>
