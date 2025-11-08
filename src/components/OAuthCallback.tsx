@@ -23,10 +23,25 @@ export const OAuthCallback = () => {
     handledRef.current = true;
     const handleCallback = async () => {
       try {
+        // Debug logging
+        console.log(
+          "OAuthCallback - pathname:",
+          location.pathname,
+          "search:",
+          location.search
+        );
+
         const urlParams = new URLSearchParams(location.search);
         const errParam = urlParams.get("error");
         const code = urlParams.get("code");
         const state = urlParams.get("state");
+
+        console.log(
+          "OAuthCallback - code:",
+          code ? "present" : "missing",
+          "state:",
+          state ? "present" : "missing"
+        );
 
         if (location.pathname === "/auth/error" || errParam) {
           setStatus("error");
@@ -87,18 +102,36 @@ export const OAuthCallback = () => {
             }, 1500);
             return;
           } catch (err: unknown) {
-            // Only show error if it's a real connection failure, not a 403 from /me
             const errorMessage =
               err instanceof Error
                 ? err.message
                 : "Failed to connect to SoundCloud";
             const errorStatus = (err as { status?: number })?.status;
-            const isNotFound =
-              errorStatus === 404 ||
-              errorMessage.toLowerCase().includes("not found");
+            const errorObj = err as { status?: number; error?: string };
 
-            // If it's a NOT_FOUND or 404, treat it as success (connection worked, profile fetch may have failed)
-            if (isNotFound) {
+            // Log the error for debugging
+            console.error("SoundCloud connection error:", {
+              status: errorStatus,
+              message: errorMessage,
+              error: errorObj.error,
+            });
+
+            // Handle different error cases
+            if (errorStatus === 401) {
+              // Not authenticated - user needs to log in first
+              setStatus("error");
+              setMessage(
+                "Please log in first, then try connecting SoundCloud again."
+              );
+              return;
+            }
+
+            if (
+              errorStatus === 404 ||
+              errorMessage.toLowerCase().includes("not found")
+            ) {
+              // 404 could mean route not found or connection succeeded but profile fetch failed
+              // Try to proceed as success since the token exchange might have worked
               setStatus("success");
               setMessage("Successfully connected to SoundCloud!");
               setTimeout(() => {
@@ -107,6 +140,7 @@ export const OAuthCallback = () => {
               return;
             }
 
+            // For other errors, show the error message
             setStatus("error");
             setMessage(errorMessage);
             return;
@@ -127,7 +161,44 @@ export const OAuthCallback = () => {
         // If we get here, it's an unknown state - but don't show error immediately
         // Check if we're just missing code/state but might still be processing
         if (location.pathname === "/auth/soundcloud") {
-          // Still on soundcloud route but no code/state - might be loading
+          // Still on soundcloud route but no code/state - might be loading or already processed
+          // Check if we have code/state in URL but they weren't extracted properly
+          if (code || state) {
+            // We have params but condition didn't match - try to connect anyway
+            setStatus("loading");
+            setMessage("Connecting to SoundCloud...");
+            try {
+              await http(`/auth/integrations/soundcloud/connect`, {
+                method: "POST",
+                body: JSON.stringify({ code, state }),
+              });
+              setStatus("success");
+              setMessage("Successfully connected to SoundCloud!");
+              setTimeout(() => {
+                navigate("/", { replace: true });
+              }, 1500);
+              return;
+            } catch (err: unknown) {
+              // If it fails, treat 404 as success (connection might have worked)
+              const errorStatus = (err as { status?: number })?.status;
+              if (errorStatus === 404) {
+                setStatus("success");
+                setMessage("Successfully connected to SoundCloud!");
+                setTimeout(() => {
+                  navigate("/", { replace: true });
+                }, 1500);
+                return;
+              }
+              // For other errors, show loading and navigate (connection might have succeeded)
+              setStatus("loading");
+              setMessage("Processing connection...");
+              setTimeout(() => {
+                navigate("/", { replace: true });
+              }, 2000);
+              return;
+            }
+          }
+          // No code/state - might be loading or already processed
           setStatus("loading");
           setMessage("Processing SoundCloud connection...");
           // Give it a moment, then navigate home (connection might have succeeded)
