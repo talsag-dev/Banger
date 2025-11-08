@@ -80,8 +80,6 @@ export const OAuthCallback = () => {
 
             setStatus("success");
             setMessage("Successfully connected to SoundCloud!");
-            // Refresh profile to get updated integration data
-            await refreshProfile();
             // Small delay to show success message, then navigate
             setTimeout(() => {
               navigate("/", { replace: true });
@@ -101,9 +99,8 @@ export const OAuthCallback = () => {
         if (location.pathname === "/auth/success") {
           setStatus("success");
           setMessage("Authentication success");
-          // Refresh profile to get updated integration data
-          await refreshProfile();
           // Small delay to show success message, then navigate
+          // Profile will refresh naturally when the app loads
           setTimeout(() => {
             navigate("/", { replace: true });
           }, 1500);
