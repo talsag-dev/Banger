@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { http } from "@utils/http";
 import type {
   SpotifySearchResponse,
-  SpotifyUser,
   SpotifyCurrentlyPlaying,
   SpotifyTopTracksResponse,
   SpotifyAuthResponse,

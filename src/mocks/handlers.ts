@@ -122,7 +122,6 @@ export const handlers = [
   // Get posts (Home feed) - wildcard for cross-origin requests
   // Feed endpoint - posts from followed users + own posts
   http.get("*/api/posts/feed", () => {
-    const currentUserId = "current-user";
     // Filter posts to only show posts from users that "current-user" follows
     // In mock, assume current-user follows user "user-2" and "user-3"
     const followedUserIds = ["current-user", "user-2", "user-3"];
@@ -480,6 +479,7 @@ export const handlers = [
       isFollowing: !!userId && userId !== "current-user",
       spotifyConnected: true,
       appleConnected: false,
+      soundcloudConnected: false,
       joinedDate: "2024-01-15",
       connectedPlatforms: [
         { type: "spotify", isConnected: true, showCurrentlyListening: true },
@@ -527,8 +527,7 @@ export const handlers = [
   }),
 
   // Follow user
-  http.post("/api/users/:userId/follow", ({ params }) => {
-    const { userId } = params as { userId: string };
+  http.post("/api/users/:userId/follow", () => {
     return HttpResponse.json({
       success: true,
       data: {
@@ -539,8 +538,7 @@ export const handlers = [
   }),
 
   // Unfollow user
-  http.delete("/api/users/:userId/follow", ({ params }) => {
-    const { userId } = params as { userId: string };
+  http.delete("/api/users/:userId/follow", () => {
     return HttpResponse.json({
       success: true,
       data: {

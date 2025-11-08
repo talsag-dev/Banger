@@ -1,7 +1,7 @@
-import type { PlatformType } from "./types";
+import type { MusicProvider } from "../../types/auth";
 
 export const handlePlatformConnection = async (
-  platform: PlatformType
+  platform: MusicProvider
 ): Promise<void> => {
   try {
     // In a real app, this would handle OAuth flows
@@ -18,8 +18,8 @@ export const handlePlatformConnection = async (
   }
 };
 
-export const getPlatformConfig = (platform: PlatformType) => {
-  const configs = {
+export const getPlatformConfig = (platform: MusicProvider) => {
+  const configs: Record<MusicProvider, { name: string; className: string; buttonText: string }> = {
     spotify: {
       name: "Spotify",
       className: "spotify",
@@ -29,6 +29,16 @@ export const getPlatformConfig = (platform: PlatformType) => {
       name: "Apple Music",
       className: "apple",
       buttonText: "Connect Apple Music",
+    },
+    "youtube-music": {
+      name: "YouTube Music",
+      className: "youtube",
+      buttonText: "Connect YouTube Music",
+    },
+    soundcloud: {
+      name: "SoundCloud",
+      className: "soundcloud",
+      buttonText: "Connect SoundCloud",
     },
   };
 
